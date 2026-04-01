@@ -28,10 +28,6 @@
     baseball: 20
   };
 
-   const honorPack = [
-      { name: "Honor Frog", img: "https://i.postimg.cc/Njfd1mf4/honor-Frog-1.png", rarity: "chroma", chance: 100 },
-    ];
-
    const ogPack = [ 
       { name: "zion", img: "https://i.ibb.co/Tx7Ks3tZ/ZayBlook.png", rarity: "common", chance: 20 },
       { name: "Caterpillar9", img: "https://i.postimg.cc/KkcjtC3k/caterpillar9.png", rarity: "uncommon", chance: 15 },
