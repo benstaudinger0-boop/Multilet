@@ -1,0 +1,259 @@
+(function () {
+  const currentUser = localStorage.getItem('fooditCurrentUser');
+  if (!currentUser) {
+    alert('No user is currently logged in.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('fooditNewStorage') || '{}');
+  const user = users[currentUser];
+  if (!user) {
+    alert('User data not found.');
+    return;
+  }
+
+  const PACK_COST = {
+    emoji: 30,
+    hat: 35,
+    og: 30,
+    hacker: 25,
+    chess: 25,
+    space: 25,
+    color: 20,
+    food: 20,
+    sports: 20
+  };
+
+   const emojiPack = [ 
+      { name: "Sad Eyes Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Sad%20Eyes%20Emoji.png", rarity: "uncommon", chance: 15 },
+      { name: "Skull Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Skull%20Emoji.png", rarity: "uncommon", chance: 15 },
+      { name: "Rich Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Rich%20Emoji.png", rarity: "uncommon", chance: 15 },
+      { name: "Angry Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Angry%20Emoji.png", rarity: "rare", chance: 10 },
+      { name: "Eyebrow Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Eyebrow%20Emoji.png", rarity: "rare", chance: 10 },
+      { name: "Cool Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Cool%20Emoji.png", rarity: "rare", chance: 10 },
+      { name: "Flushed Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Flushed%20Emoji.png", rarity: "epic", chance: 5 },
+      { name: "Dead Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Dead%20Emoji.png", rarity: "epic", chance: 5 },
+      { name: "Devil Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Devil%20Emoji.png", rarity: "epic", chance: 5 },
+      { name: "Poop Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Poop%20Emoji.png", rarity: "legendary", chance: 1 },
+      { name: "Laughing Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Laughing%20Emoji.png", rarity: "legendary", chance: 1 },
+      { name: "Cold Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Cold%20Emoji.png", rarity: "chroma", chance: 0.05 },
+      { name: "Hot Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Hot%20Emoji.png", rarity: "chroma", chance: 0.05 },
+      { name: "Clown Emoji", img: "https://tri.pengpowers.xyz/media/capsules/Emoji/trians/Clown%20Emoji.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const hatPack = [ 
+      { name: "Blue Cap", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Blue%20Cap.png", rarity: "uncommon", chance: 15 },
+      { name: "Green Cap", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Green%20Cap.png", rarity: "uncommon", chance: 15 },
+      { name: "Red Cap", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Red%20Cap.png", rarity: "uncommon", chance: 15 },
+      { name: "Gray Cap", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Grey%20Cap.png", rarity: "uncommon", chance: 15 },
+      { name: "Cowboy Hat", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Cowboy%20Hat.png", rarity: "rare", chance: 10 },
+      { name: "Straw Hat", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Straw%20Hat.png", rarity: "rare", chance: 10 },
+      { name: "Sombrero", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Sombrero.png", rarity: "epic", chance: 5 },
+      { name: "Top Hat", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Top%20Hat.png", rarity: "epic", chance: 5 },
+      { name: "Fedora", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Fedora.png", rarity: "legendary", chance: 1 },
+      { name: "Golden Top Hat", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Golden%20Top%20Hat.png", rarity: "chroma", chance: 0.05 },
+      { name: "Diamond Hat", img: "https://tri.pengpowers.xyz/media/capsules/Hat/trians/Diamond%20Hat.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const ogPack = [ 
+      { name: "Trixter", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/Trixter.png", rarity: "uncommon", chance: 15 },
+      { name: "BRP", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/BRP.png", rarity: "uncommon", chance: 15 },
+      { name: "Xotic", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/Xotic.png", rarity: "rare", chance: 10 },
+      { name: "LukeDuke", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/LukeDuke.png", rarity: "epic", chance: 5 },
+      { name: "Hans Island", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/Hans%20Island.png", rarity: "epic", chance: 5 },
+      { name: "EvDogg09", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/EvDogg09.png", rarity: "legendary", chance: 1 },
+      { name: "ColControl", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/ColControl.png", rarity: "chroma", chance: 0.05 },
+      { name: "Bringles", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/Bringles.png", rarity: "chroma", chance: 0.05 },
+      { name: "monkey", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/monkey.png", rarity: "mystical", chance: 0.005 },
+      { name: "penguinpowers", img: "https://tri.pengpowers.xyz/media/capsules/OG/trians/penguinpowers.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const hackerPack = [ 
+      { name: "Hacker", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Hacker.png", rarity: "uncommon", chance: 15 },
+      { name: "ERROR", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/ERROR.png", rarity: "uncommon", chance: 15 },
+      { name: "Virus", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Virus.png", rarity: "uncommon", chance: 15 },
+      { name: "Banned", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Banned.png", rarity: "uncommon", chance: 15 },
+      { name: "Hacker Bot", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Hacker%20Bot.png", rarity: "rare", chance: 10 },
+      { name: "Hacker Code", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Hacker%20Code.png", rarity: "rare", chance: 10 },
+      { name: "Glitch", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Glitch.png", rarity: "rare", chance: 10 },
+      { name: "Bomb", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Bomb.png", rarity: "epic", chance: 5 },
+      { name: "Letter", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Letter.png", rarity: "epic", chance: 5 },
+      { name: "Idiot", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Idiot.png", rarity: "legendary", chance: 1 },
+      { name: "Lovely Letter", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Lovely%20Letter.png", rarity: "chroma", chance: 0.05 },
+      { name: "Overload", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Overload.png", rarity: "chroma", chance: 0.05 },
+      { name: "Dark Web", img: "https://tri.pengpowers.xyz/media/capsules/Hacker/trians/Dark%20Web.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const chessPack = [ 
+      { name: "White Pawn", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20Pawn.png", rarity: "uncommon", chance: 15 },
+      { name: "Black Pawn", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20Pawn.png", rarity: "uncommon", chance: 15 },
+      { name: "White Horse", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20Knight.png", rarity: "uncommon", chance: 15 },
+      { name: "Black Horse", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20Knight.png", rarity: "uncommon", chance: 15 },
+      { name: "White Bishop", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20Bishop.png", rarity: "rare", chance: 10 },
+      { name: "Black Bishop", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20Bishop.png", rarity: "rare", chance: 10 },
+      { name: "White Rook", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20Rook.png", rarity: "epic", chance: 5 },
+      { name: "Black Rook", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20Rook.png", rarity: "epic", chance: 5 },
+      { name: "White Queen", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20Queen.png", rarity: "legendary", chance: 1 },
+      { name: "Black Queen", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20Queen.png", rarity: "legendary", chance: 1 },
+      { name: "White King", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/White%20King.png", rarity: "chroma", chance: 0.05 },
+      { name: "Black King", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Black%20King.png", rarity: "chroma", chance: 0.05 },
+      { name: "Pink Knight", img: "https://tri.pengpowers.xyz/media/capsules/Chess/trians/Pink%20Knight.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const spacePack = [ 
+      { name: "Earth", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Earth.png", rarity: "uncommon", chance: 15 },
+      { name: "Moon", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Moon.png", rarity: "uncommon", chance: 15 },
+      { name: "Mars", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Mars.png", rarity: "uncommon", chance: 15 },
+      { name: "Saturn", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Saturn.png", rarity: "rare", chance: 10 },
+      { name: "Neptune", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Neptune.png", rarity: "rare", chance: 10 },
+      { name: "Uranus", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Uranus.png", rarity: "epic", chance: 5 },
+      { name: "Rocket", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Rocket.png", rarity: "epic", chance: 5 },
+      { name: "Sun", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Sun.png", rarity: "legendary", chance: 1 },
+      { name: "Galaxy", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Galaxy.png", rarity: "legendary", chance: 1 },
+      { name: "Tim the Alien", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Tim%20the%20Alien.png", rarity: "chroma", chance: 0.05 },
+      { name: "Northern Lights", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Northern%20Lights.png", rarity: "chroma", chance: 0.05 },
+      { name: "Black Hole", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Black%20Hole.png", rarity: "chroma", chance: 0.05 },
+      { name: "Meteor", img: "https://tri.pengpowers.xyz/media/capsules/Space/trians/Meteor.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const colorPack = [ 
+      { name: "Red", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Red.png", rarity: "uncommon", chance: 15 },
+      { name: "Blue", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Blue.png", rarity: "uncommon", chance: 15 },
+      { name: "Yellow", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Yellow.png", rarity: "uncommon", chance: 15 },
+      { name: "Orange", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Orange.png", rarity: "rare", chance: 10 },
+      { name: "Purple", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Purple.png", rarity: "rare", chance: 10 },
+      { name: "Green", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Green.png", rarity: "rare", chance: 10 },
+      { name: "Black", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Black.png", rarity: "epic", chance: 5 },
+      { name: "Brown", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Brown.png", rarity: "epic", chance: 5 },
+      { name: "Pink", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Pink.png", rarity: "legendary", chance: 1 },
+      { name: "White", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/White.png", rarity: "legendary", chance: 1 },
+      { name: "Silver", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Silver.png", rarity: "chroma", chance: 0.05 },
+      { name: "Gold", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Gold.png", rarity: "chroma", chance: 0.05 },
+      { name: "Rainbow", img: "https://tri.pengpowers.xyz/media/capsules/Color/trians/Rainbow.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const foodPack = [ 
+      { name: "Watermelon", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Watermelon.png", rarity: "uncommon", chance: 15 },
+      { name: "Carrot", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Carrot.png", rarity: "uncommon", chance: 15 },
+      { name: "Cheese", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Cheese.png", rarity: "uncommon", chance: 15 },
+      { name: "Pizza", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Pizza.png", rarity: "uncommon", chance: 15 },
+      { name: "Cookie", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Cookie.png", rarity: "uncommon", chance: 15 },
+      { name: "Strawberry", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Strawberry.png", rarity: "uncommon", chance: 15 },
+      { name: "Pastry", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Pastry.png", rarity: "rare", chance: 10 },
+      { name: "Popsicle", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Popcicle.png", rarity: "rare", chance: 10 },
+      { name: "Donut", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Donut.png", rarity: "rare", chance: 10 },
+      { name: "Pie", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Pie.png", rarity: "rare", chance: 10 },
+      { name: "Waffle", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Waffle.png", rarity: "rare", chance: 10 },
+      { name: "Candy Corn", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Candy%20Corn.png", rarity: "epic", chance: 5 },
+      { name: "Chocolate Cake", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Chocolate%20Cake.png", rarity: "epic", chance: 5 },
+      { name: "Sandwich", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Sandwich.png", rarity: "legendary", chance: 1 },
+      { name: "Vanilla Cake", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Vanilla%20Cake.png", rarity: "legendary", chance: 1 },
+      { name: "Chocolate Bar", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Chocolate%20Bar.png", rarity: "chroma", chance: 0.05 },
+      { name: "Golden Carrot", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Golden%20Carrot.png", rarity: "chroma", chance: 0.05 },
+      { name: "Kiss", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Kiss.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const sportsPack = [ 
+      { name: "Soccer Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Soccer%20Ball.png", rarity: "uncommon", chance: 15 },
+      { name: "Football", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Football.png", rarity: "uncommon", chance: 15 },
+      { name: "Basketball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Basketball.png", rarity: "uncommon", chance: 15 },
+      { name: "Baseball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Baseball.png", rarity: "uncommon", chance: 15 },
+      { name: "Boomerang", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Boomerang.png", rarity: "rare", chance: 10 },
+      { name: "Volley Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Volleyball.png", rarity: "rare", chance: 10 },
+      { name: "Tennis Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Tennis%20Ball.png", rarity: "rare", chance: 10 },
+      { name: "Pool Rack", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Pool%20Rack.png", rarity: "epic", chance: 5 },
+      { name: "Bowling Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Bowling%20Ball.png", rarity: "epic", chance: 5 },
+      { name: "Birdie", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Birdie.png", rarity: "legendary", chance: 1 },
+      { name: "Beach Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Beach%20Ball.png", rarity: "chroma", chance: 0.05 },
+      { name: "Gold Bowling Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Gold%20Bowling%20Ball.png", rarity: "mystical", chance: 0.005 },
+    ];
+
+  const packs = { emoji: emojiPack, hat: hatPack, og: ogPack, hacker: hackerPack, chess: chessPack, space: spacePack, color: colorPack, food: foodPack, sports: sportsPack };
+
+  // UI setup
+  const ui = document.createElement('div');
+  ui.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    color: black;
+    font-family: Arial;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 0 15px gray;
+    border: 2px solid white;
+    max-width: 320px;
+  `;
+  ui.innerHTML = `
+    <strong style="font-size: 16px;">Pack Opener</strong><br><br>
+    <label>Pack:
+      <select id="cheat-pack" style="width: 100%; padding: 6px;">
+        <option value="emoji">Emoji</option>
+        <option value="hat">Hat</option>
+        <option value="og">OG</option>
+        <option value="hacker">Hacker</option>
+        <option value="chess">Chess</option>
+        <option value="space">Space</option>
+        <option value="color">Color</option>
+        <option value="food">Food</option>
+        <option value="sports">Sports</option>
+      </select>
+    </label><br><br>
+    <label>Amount:
+      <input id="cheat-amount" type="number" value="1" min="1" style="width: 100%; padding: 6px;">
+    </label><br><br>
+    <button id="cheat-open" style="width: 100%; background: black; color: white; padding: 10px; font-weight: bold; border-radius: 6px; border: none;">Open Pack(s)</button>
+    <div id="cheat-result" style="margin-top: 10px;"></div>
+  `;
+  document.body.appendChild(ui);
+
+  // Logic for opening packs
+  document.getElementById('cheat-open').onclick = () => {
+    const pack = document.getElementById('cheat-pack').value;
+    const amount = parseInt(document.getElementById('cheat-amount').value);
+    const cost = PACK_COST[pack] * amount;
+
+    if (user.tokens < cost) {
+      alert(`You need ${cost} tokens, but only have ${user.tokens}`);
+      return;
+    }
+
+    const results = [];
+
+    for (let i = 0; i < amount; i++) {
+      // Calculate total chance for the pack
+      const totalChance = packs[pack].reduce((acc, blook) => acc + blook.chance, 0);
+      const rand = Math.random() * totalChance;
+      let sum = 0;
+      let reward = packs[pack][packs[pack].length - 1]; // fallback default
+
+      for (const blook of packs[pack]) {
+        sum += blook.chance;
+        if (rand <= sum) {
+          reward = blook;
+          break;
+        }
+      }
+
+      user.blooks = user.blooks || [];
+      user.blooks.push(reward);
+      results.push(reward.name);
+    }
+
+    user.tokens -= cost;
+    user.packsOpened = (user.packsOpened || 0) + amount;
+    users[currentUser] = user;
+    localStorage.setItem('fooditNewStorage', JSON.stringify(users));
+
+    // Update UI
+    const display = document.getElementById('token-count');
+    if (display) display.textContent = user.tokens.toLocaleString('en-US');
+
+    document.getElementById('cheat-result').textContent = ` You got: ${results.join(', ')}`;
+  };
+
+  console.log('%c Cheat code enabled: Open packs manually in bottom-right box.', 'color: black; font-weight: bold;');
+})();
