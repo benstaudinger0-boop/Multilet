@@ -1,0 +1,325 @@
+(function () {
+  const currentUser = localStorage.getItem('fooditCurrentUser');
+  if (!currentUser) {
+    alert('No user is currently logged in.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('fooditNewStorage') || '{}');
+  const user = users[currentUser];
+  if (!user) {
+    alert('User data not found.');
+    return;
+  }
+
+  const PACK_COST = {
+    og: 30,
+    cat: 30,
+    dog: 30,
+    dragon: 25,
+    frog: 25,
+    pig: 25,
+    crab: 25,
+    bird: 25,
+    rabbit: 25,
+    pokemon: 20,
+    butterfly: 20,
+    remix: 20,
+    baseball: 20
+  };
+
+   const honorPack = [
+      { name: "Honor Frog", img: "https://i.postimg.cc/Njfd1mf4/honor-Frog-1.png", rarity: "chroma", chance: 100 },
+    ];
+
+   const ogPack = [ 
+      { name: "zion", img: "https://i.ibb.co/Tx7Ks3tZ/ZayBlook.png", rarity: "common", chance: 20 },
+      { name: "Caterpillar9", img: "https://i.postimg.cc/KkcjtC3k/caterpillar9.png", rarity: "uncommon", chance: 15 },
+      { name: "mangogurl", img: "https://i.postimg.cc/zfNQGYvG/mangogurl-17-02-2026-15-08-47.png", rarity: "rare", chance: 10 },
+      { name: "dungeonsdragons", img: "https://i.postimg.cc/B6VNDrSp/dungeonsdragons-17-02-2026-15-14-15.png", rarity: "epic", chance: 5 },
+      { name: "iluvhippos", img: "https://i.postimg.cc/wvpRrFWv/iluvhippos-17-02-2026-15-18-44.png", rarity: "legendary", chance: 1 },
+      { name: "RandomPerson1223", img: "https://i.postimg.cc/YLQCrn2Q/Ditto.gif", rarity: "chroma", chance: 0.05 },
+      { name: "shimmering4541", img: "https://i.postimg.cc/hvwSktSd/shimmering4541-17-02-2026-15-28-08.png", rarity: "unique", chance: 0.05 },
+      { name: "twirlygrl", img: "https://i.postimg.cc/C1RMm80Z/twirlygrl-17-02-2026-15-33-24.png", rarity: "mystical", chance: 0.005 },
+      { name: "KingCat", img: "https://i.postimg.cc/JnZ7x9Hw/Cats-Are-Amazing.png", rarity: "godly", chance: 0.005 },
+    ];
+    
+    const catPack = [ 
+      { name: "Cat", img: "https://i.postimg.cc/WzsWsG4P/Cat.png", rarity: "common", chance: 20 },
+      { name: "Kitten", img: "https://i.postimg.cc/tghN7swQ/download.png", rarity: "common", chance: 20 },
+      { name: "Black Cat", img: "https://i.postimg.cc/kgP3RMB0/blackCat.png", rarity: "uncommon", chance: 15 },
+      { name: "Striped Cat", img: "https://i.postimg.cc/QCLB7mTz/striped-cat-17-02-2026-15-44-22.png", rarity: "uncommon", chance: 15 },
+      { name: "White Cat", img: "https://i.postimg.cc/Y23G06SZ/white-cat-17-02-2026-16-14-42.png", rarity: "rare", chance: 10 },
+      { name: "Pebbles", img: "https://i.postimg.cc/wBmFYf9d/pebbles-17-02-2026-16-31-32.png", rarity: "rare", chance: 10 },
+      { name: "Unicorn Cat", img: "https://i.postimg.cc/MTGTj4HN/unicorn-cat-17-02-2026-16-36-33.png", rarity: "epic", chance: 5 },
+      { name: "Sunglasses Cat", img: "https://i.postimg.cc/Y0RBf2P0/sunglasses-cat.png", rarity: "legendary", chance: 1 },
+      { name: "Frozen Cat", img: "https://i.postimg.cc/fL4tSs1J/download-17-02-2026-17-11-04.png", rarity: "chroma", chance: 0.05 },
+      { name: "Sheriff Cat", img: "https://i.postimg.cc/SRPpjStw/sheriff-cat.png", rarity: "supreme", chance: 0.05 },
+      { name: "Gummy Cat", img: "https://i.postimg.cc/PJDkpssT/gummy-cat-17-02-2026-17-21-31.png", rarity: "unique", chance: 0.05 },
+      { name: "Rainbow Cat", img: "https://i.postimg.cc/8CY3hKbP/rainbow-cat-17-02-2026-17-27-15.png", rarity: "mystical", chance: 0.005 },
+      { name: "Angel Cat", img: "https://i.postimg.cc/k4dH1VLf/dream.png", rarity: "godly", chance: 0.005 },
+      { name: "God Cat", img: "https://i.postimg.cc/qvPDqhBv/cosmic.png", rarity: "heavenly", chance: 0.005 },
+      { name: "Lovely Cat", img: "https://i.postimg.cc/NMg3G9b6/lovely-cat-17-02-2026-17-57-35.png", rarity: "iridescent", chance: 0.005 },
+    ];
+    
+    const dogPack = [ 
+      { name: "Dog", img: "https://i.postimg.cc/ZR86H0hy/download.png", rarity: "common", chance: 20 },
+      { name: "Puppy", img: "https://i.postimg.cc/fyMmrZzh/download.jpg", rarity: "common", chance: 20 },
+      { name: "Wolf", img: "https://i.postimg.cc/J7QbByxC/download-(1).jpg", rarity: "uncommon", chance: 15 },
+      { name: "Coyote", img: "https://i.postimg.cc/RFYqcBWc/coyote-17-02-2026-19-02-53.png", rarity: "rare", chance: 10 },
+      { name: "Saint Bernard", img: "https://i.postimg.cc/y6LY39Jn/Dog-17-02-2026-19-46-40.png", rarity: "epic", chance: 5 },
+      { name: "Demon Dog", img: "https://i.postimg.cc/gJYmnkG2/demon-dog-17-02-2026-20-58-10.png", rarity: "legendary", chance: 1 },
+      { name: "Drunk Dog", img: "https://i.postimg.cc/LsBzy3Kp/drunk-dog-17-02-2026-21-00-29.png", rarity: "chroma", chance: 0.05 },
+      { name: "Soccer Dog", img: "https://i.postimg.cc/DZ6RKGG9/soccer-dog.png", rarity: "supreme", chance: 0.05 },
+      { name: "Baseball Dog", img: "https://i.postimg.cc/zDMzh6t4/baseball-dog.png", rarity: "supreme", chance: 0.05 },
+      { name: "Basketball Dog", img: "https://i.postimg.cc/pTfSd963/basketball-dog.png", rarity: "unique", chance: 0.05 },
+      { name: "Diamond Dog", img: "https://i.postimg.cc/jjrQS8YD/diamond-dog-18-02-2026-18-43-21.png", rarity: "mystical", chance: 0.005 },
+      { name: "French Dog", img: "https://i.postimg.cc/DZ1zygFZ/french-dog.png", rarity: "godly", chance: 0.005 },
+      { name: "Cake Dog", img: "https://i.postimg.cc/BvMg7xRF/cake-dog-18-02-2026-18-58-41.png", rarity: "heavenly", chance: 0.005 },
+      { name: "Banana Dog", img: "https://i.postimg.cc/g2KQdLfb/banana-dog-18-02-2026-19-11-12.png", rarity: "iridescent", chance: 0.005 },
+    ];
+    
+    const dragonPack = [ 
+      { name: "Fire", img: "https://i.postimg.cc/Y9M8v3ZG/Fire-19-02-2026-14-49-29.png", rarity: "common", chance: 20 },
+      { name: "Knight", img: "https://i.postimg.cc/vmzfNdq3/Knight-19-02-2026-14-52-09.png", rarity: "common", chance: 20 },
+      { name: "Princess", img: "https://i.postimg.cc/ZY9jCCDF/princess-19-02-2026-14-56-04.png", rarity: "uncommon", chance: 15 },
+      { name: "Prince", img: "https://i.postimg.cc/rsSr5Xr7/Prince.png", rarity: "uncommon", chance: 15 },
+      { name: "Horse", img: "https://i.postimg.cc/P5fwv7r1/download.jpg", rarity: "rare", chance: 10 },
+      { name: "Green Dragon", img: "https://i.postimg.cc/PqPv28DP/Dragon.webp", rarity: "rare", chance: 10 },
+      { name: "Fire Breathing Dragon", img: "https://i.postimg.cc/1zwsmmhC/fire-dragon-19-02-2026-15-02-43.png", rarity: "epic", chance: 5 },
+      { name: "Army", img: "https://i.postimg.cc/sDMFfj5N/army-19-02-2026-14-52-09.png", rarity: "legendary", chance: 1 },
+      { name: "Orange Dragon", img: "https://i.postimg.cc/hjSmVPnL/orange-dragon-19-02-2026-16-08-51.png", rarity: "chroma", chance: 0.05 },
+      { name: "Yellow Dragon", img: "https://i.postimg.cc/4x6nwkBQ/yellow-dragon-19-02-2026-16-34-09.png", rarity: "chroma", chance: 0.05 },
+      { name: "Red Dragon", img: "https://i.postimg.cc/8cvrSFB0/red-dragon-19-02-2026-16-36-19.png", rarity: "supreme", chance: 0.05 },
+      { name: "Blue Dragon", img: "https://i.postimg.cc/fRRT7ttr/blue-dragon-19-02-2026-16-38-08.png", rarity: "supreme", chance: 0.05 },
+      { name: "Candy Corn Dragon", img: "https://i.postimg.cc/wx2CXWXQ/candy-corn-dragon-19-02-2026-16-40-00.png", rarity: "unique", chance: 0.05 },
+      { name: "Nike Dragon", img: "https://i.postimg.cc/c44rh5Pk/nike-dragon-19-02-2026-16-42-54.png", rarity: "mystical", chance: 0.005 },
+      { name: "Ice Dragon", img: "https://i.postimg.cc/8CNTt7Y8/ice-dragon-19-02-2026-15-02-43.png", rarity: "godly", chance: 0.005 },
+      { name: "Chocolate Dragon", img: "https://i.postimg.cc/XJXSzdcm/Dragon-19-02-2026-17-39-29.png", rarity: "heavenly", chance: 0.005 },
+      { name: "Dark Dragon", img: "https://blacket.org/content/blooks/Dark%20Dragon.webp", rarity: "iridescent", chance: 0.005 },
+    ];
+    
+    const pigPack = [ 
+      { name: "Pig", img: "https://i.postimg.cc/5yGpMyqd/download.jpg", rarity: "common", chance: 20 },
+      { name: "Piglet", img: "https://i.postimg.cc/cJj7YthT/piglet-19-02-2026-18-10-12.png", rarity: "common", chance: 20 },
+      { name: "Mud", img: "https://i.postimg.cc/760z2sfM/mud-19-02-2026-19-11-43.png", rarity: "uncommon", chance: 15 },
+      { name: "Eggshell", img: "https://i.postimg.cc/PJKPWBhL/eggshell-19-02-2026-19-15-38.png", rarity: "uncommon", chance: 15 },
+      { name: "Muddy Pig", img: "https://i.postimg.cc/Vs46VPQL/muddy-pig-19-02-2026-19-17-23.png", rarity: "rare", chance: 10 },
+      { name: "ZigZag Eggshell", img: "https://i.postimg.cc/c42dpsDN/Zigzag-Eggshell.png", rarity: "epic", chance: 5 },
+      { name: "Spotted Eggshell", img: "https://i.postimg.cc/GtN1nQxx/Spotted-Eggshell.png", rarity: "legendary", chance: 1 },
+      { name: "Checkered Eggshell", img: "https://i.postimg.cc/vmzFZMvr/Checkered-Eggshell.png", rarity: "chroma", chance: 0.05 },
+      { name: "Sunglasses Pig", img: "https://blacket.org/content/blooks/Party%20Pig.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Garbage Pig", img: "https://i.postimg.cc/CKds3jJH/garbage-pig.png", rarity: "supreme", chance: 0.05 },
+      { name: "Card Pig", img: "https://i.postimg.cc/WzrvXFQk/card-pig.png", rarity: "unique", chance: 0.05 },
+      { name: "Banana Peel", img: "https://i.postimg.cc/BbWWLZXv/banana-peel.png", rarity: "mystical", chance: 0.005 },
+      { name: "King Pig", img: "https://i.postimg.cc/FR5G0Ygf/king-pig-20-02-2026-17-20-12.png", rarity: "godly", chance: 0.005 },
+      { name: "Tropical Pig", img: "https://blacket.org/content/blooks/Tropical%20Pig.webp", rarity: "heavenly", chance: 0.005 },
+      { name: "Piggy Island", img: "https://blacket.org/content/blooks/Tropical%20Island.webp", rarity: "iridescent", chance: 0.005 },
+    ];
+    
+    const crabPack = [ 
+      { name: "Crab", img: "https://i.postimg.cc/cH1qfkcn/Crab.webp", rarity: "common", chance: 20 },
+      { name: "Lemon Crab", img: "https://blacket.org/content/blooks/Lemon%20Crab.webp", rarity: "uncommon", chance: 15 },
+      { name: "Santa Claws", img: "https://blacket.org/content/blooks/Santa%20Claws.webp", rarity: "rare", chance: 10 },
+      { name: "Robot Crab", img: "https://i.postimg.cc/sgnHtfPw/robot-crab-20-02-2026-18-22-22.png", rarity: "epic", chance: 5 },
+      { name: "Farm Crab", img: "https://i.postimg.cc/Cxhgvnvg/farmer-crab-21-02-2026-08-51-20.png", rarity: "legendary", chance: 1 },
+      { name: "Ice Crab", img: "https://blacket.org/content/blooks/Ice%20Crab.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Golden Crab", img: "https://blacket.org/content/blooks/Golden%20Crab.webp", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const birdPack = [ 
+      { name: "Chicken", img: "https://i.postimg.cc/7ZvYPLY5/download.jpg", rarity: "common", chance: 20 },
+      { name: "Chick", img: "https://i.postimg.cc/SRBqKZ4H/download-(1).jpg", rarity: "common", chance: 20 },
+      { name: "Penguin", img: "https://i.postimg.cc/0Qrq0g2V/download-(2).jpg", rarity: "uncommon", chance: 15 },
+      { name: "Baby Penguin", img: "https://i.postimg.cc/dQkhJpmT/download-(3).jpg", rarity: "uncommon", chance: 15 },
+      { name: "Turkey", img: "https://blacket.org/content/blooks/Turkey.webp", rarity: "rare", chance: 10 },
+      { name: "Duck", img: "https://i.postimg.cc/Y94CqLgt/download.jpg", rarity: "rare", chance: 10 },
+      { name: "Peacock", img: "https://blacket.org/content/blooks/Peacock.webp", rarity: "epic", chance: 5 },
+      { name: "Frozen Peacock", img: "https://blacket.org/content/blooks/White%20Peacock.webp", rarity: "legendary", chance: 1 },
+      { name: "Lovely Peacock", img: "https://blacket.org/content/blooks/Lovely%20Peacock.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Chick Chicken", img: "https://blacket.org/content/blooks/Chick%20Chicken.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Chicken Chick", img: "https://blacket.org/content/blooks/Chicken%20Chick.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Cooked Turkey", img: "https://i.postimg.cc/w3YyJRXT/ninu9n.png", rarity: "unique", chance: 0.05 },
+      { name: "Worm", img: "https://i.postimg.cc/4dXQDZh6/Worm-21-02-2026-10-18-25.png", rarity: "mystical", chance: 0.005 },
+      { name: "Bird Nest", img: "https://blacket.org/content/blooks/Dino%20Egg.webp", rarity: "godly", chance: 0.005 },
+      { name: "Gold Seagull", img: "https://i.postimg.cc/SsMbvwHc/gold-seagull.png", rarity: "heavenly", chance: 0.005 },
+      { name: "Parrot Astronaut", img: "https://i.postimg.cc/0y48Xdr3/parrot-astronaut-21-02-2026-10-48-09.png", rarity: "iridescent", chance: 0.005 },
+    ];
+    
+    const rabbitPack = [ 
+      { name: "Rabbit", img: "https://i.postimg.cc/hjr7k17Z/download-(1).jpg", rarity: "common", chance: 20 },
+      { name: "Arctic Rabbit", img: "https://i.postimg.cc/fLKsQ6MH/download.jpg", rarity: "common", chance: 20 },
+      { name: "Carrot", img: "https://tri.pengpowers.xyz/media/capsules/Food/trians/Carrot.png", rarity: "uncommon", chance: 15 },
+      { name: "Black Rabbit", img: "https://i.postimg.cc/YC3T9Q5s/black-rabbit-21-02-2026-12-26-02.png", rarity: "uncommon", chance: 15 },
+      { name: "Pilgrim Rabbit", img: "https://i.postimg.cc/fkFtjVFx/pilgrim-rabbit-21-02-2026-12-28-08.png", rarity: "rare", chance: 10 },
+      { name: "Chocolate Rabbit", img: "https://blacket.org/content/blooks/Chocolate%20Rabbit.webp", rarity: "rare", chance: 10 },
+      { name: "Spring Rabbit", img: "https://blacket.org/content/blooks/Spring%20Rabbit.webp", rarity: "epic", chance: 5 },
+      { name: "Cool Rabbit", img: "https://i.postimg.cc/QMn8F22F/cool-rabbit-21-02-2026-12-34-45.png", rarity: "legendary", chance: 1 },
+      { name: "Lovely Rabbit", img: "https://i.postimg.cc/L6MHgBWH/download-(1).jpg", rarity: "chroma", chance: 0.05 },
+      { name: "Drunk Rabbit", img: "https://i.postimg.cc/TPZ8MT8z/drunk-rabbit-21-02-2026-12-42-24.png", rarity: "supreme", chance: 0.05 },
+      { name: "Fiery Rabbit", img: "https://i.postimg.cc/Z5BVkpJ2/firey-rabbit-21-02-2026-12-43-57.png", rarity: "unique", chance: 0.05 },
+      { name: "Nintendo Rabbit", img: "https://i.postimg.cc/6QVPSn0p/nintendo-rabbit-21-02-2026-12-52-43.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const butterflyPack = [ 
+      { name: "Butterfly", img: "https://blacket.org/content/blooks/Butterfly.webp", rarity: "common", chance: 20 },
+      { name: "Yellow Butterfly", img: "https://i.postimg.cc/s1F8qct1/yellow-Butterfly.png", rarity: "uncommon", chance: 15 },
+      { name: "Green Butterfly", img: "https://i.postimg.cc/FsyNmdD9/green-butterfly.png", rarity: "rare", chance: 10 },
+      { name: "Blue Butterfly", img: "https://blacket.org/content/blooks/Blue%20Butterfly.webp", rarity: "epic", chance: 5 },
+      { name: "Red Butterfly", img: "https://i.postimg.cc/mkWJ6Vxg/red-Butterfly-21-02-2026-13-22-53.png", rarity: "legendary", chance: 1 },
+      { name: "Purple Butterfly", img: "https://i.postimg.cc/nrxS1z7q/purple-Butterfly-21-02-2026-13-24-43.png", rarity: "chroma", chance: 0.05 },
+      { name: "Split Butterfly", img: "https://i.postimg.cc/7690pYd0/split-Butterfly-21-02-2026-13-26-57.png", rarity: "mystical", chance: 0.005 },
+      { name: "Rainbow Butterfly", img: "https://i.postimg.cc/g21CZGMC/rainbow-Butterfly-21-02-2026-13-30-07.png", rarity: "godly", chance: 0.005 },
+    ];
+    
+    const pokemonPack = [ 
+      { name: "Bulbasaur", img: "https://i.postimg.cc/xCmM13Xp/Bulbasaur.png", rarity: "common", chance: 20 },
+      { name: "Snorlax", img: "https://i.postimg.cc/h49VFMWP/Snorlax.png", rarity: "uncommon", chance: 15 },
+      { name: "Gyarados", img: "https://i.postimg.cc/6pQZvX7W/Gyarados.png", rarity: "rare", chance: 10 },
+      { name: "Mewtwo", img: "https://i.postimg.cc/k56tTvF1/Mewtwo.png", rarity: "epic", chance: 5 },
+      { name: "Lopunny", img: "https://i.postimg.cc/Twn562s0/Lopunny.png", rarity: "legendary", chance: 1 },
+      { name: "Eevee", img: "https://i.postimg.cc/SQ7Y1sCY/Eevee.png", rarity: "chroma", chance: 0.05 },
+      { name: "Jigglypuff", img: "https://i.postimg.cc/mghcryq8/Jigglypuff.png", rarity: "supreme", chance: 0.05 },
+      { name: "Gengar", img: "https://i.postimg.cc/zBwvQtLM/Gengar.png", rarity: "unique", chance: 0.05 },
+      { name: "Pikachu", img: "https://i.postimg.cc/zv0Bzykm/Pikachu.png", rarity: "mystical", chance: 0.005 },
+      { name: "Charizard", img: "https://i.postimg.cc/rm9yjD38/Charizard.gif", rarity: "godly", chance: 0.005 },
+    ];
+    
+    const remixPack = [ 
+      { name: "Brownet", img: "https://brownet.neocities.org/favicon.png", rarity: "common", chance: 20 },
+      { name: "Foodit", img: "https://i.postimg.cc/DwTNfscc/foodit-Logo.png", rarity: "common", chance: 20 },
+      { name: "Ploopit", img: "https://i.postimg.cc/GhP0y003/download.jpg", rarity: "uncommon", chance: 15 },
+      { name: "Boofet", img: "https://i.postimg.cc/d3KHs1Vy/download.png", rarity: "uncommon", chance: 15 },
+      { name: "Blooket", img: "https://i.postimg.cc/xdJtLHkk/static-assets-upload7388943207916988923.webp", rarity: "rare", chance: 10 },
+      { name: "Blooket4free", img: "https://i.postimg.cc/gkgD548Z/blooket4free-21-02-2026-14-07-25.png", rarity: "rare", chance: 10 },
+      { name: "Triangulet", img: "https://i.postimg.cc/nzfY7Wb4/download.png", rarity: "epic", chance: 5 },
+      { name: "Warriet", img: "https://i.postimg.cc/YqCN1gVV/unnamed.png", rarity: "legendary", chance: 1 },
+      { name: "Blacket", img: "https://i.postimg.cc/RZ3cYmMx/download.jpg", rarity: "chroma", chance: 0.05 },
+      { name: "Picklet", img: "https://picklet.party/avatars/hidden/picklet.svg", rarity: "mystical", chance: 0.005 },
+      { name: "Kittylet", img: "https://i.postimg.cc/QH5HDV0y/kittylet-logo.png", rarity: "godly", chance: 0.005 },
+    ];
+    
+    const baseballPack = [ 
+      { name: "Braves", img: "https://i.postimg.cc/Dzzy6rL1/braves.png", rarity: "common", chance: 20 },
+      { name: "White Sox", img: "https://i.postimg.cc/nLMpBHfY/white-sox-21-02-2026-15-04-09.png", rarity: "common", chance: 20 },
+      { name: "Rockies", img: "https://i.postimg.cc/6QDJZn0Z/rockies-21-02-2026-15-06-19.png", rarity: "common", chance: 20 },
+      { name: "Astros", img: "https://i.postimg.cc/VLSqGtBS/astros-21-02-2026-15-12-22.png", rarity: "common", chance: 20 },
+      { name: "Royals", img: "https://i.postimg.cc/02JSdsP5/royals-21-02-2026-15-15-05.png", rarity: "common", chance: 20 },
+      { name: "Marlins", img: "https://i.postimg.cc/Z5SLWRpR/marlins-21-02-2026-15-17-27.png", rarity: "common", chance: 20 },
+      { name: "Pirates", img: "https://i.postimg.cc/gJXhSF39/pirates-21-02-2026-15-19-21.png", rarity: "common", chance: 20 },
+      { name: "Rays", img: "https://i.postimg.cc/q70pR9kt/rays-21-02-2026-19-14-07.png", rarity: "common", chance: 20 },
+      { name: "Padres", img: "https://i.postimg.cc/Bbdn0Mb5/padres.png", rarity: "uncommon", chance: 15 },
+      { name: "Cardinals", img: "https://i.postimg.cc/26L5Xs8r/cardinals-22-02-2026-09-45-33.png", rarity: "uncommon", chance: 15 },
+      { name: "Athletics", img: "https://i.postimg.cc/R0H5r4fb/athletics-22-02-2026-09-47-53.png", rarity: "uncommon", chance: 15 },
+      { name: "Tigers", img: "https://i.postimg.cc/NMBNNcxL/tigers.png", rarity: "uncommon", chance: 15 },
+      { name: "Giants", img: "https://i.postimg.cc/wTwQzNQL/giants.png", rarity: "uncommon", chance: 15 },
+      { name: "Nationals", img: "https://i.postimg.cc/KzbMBc5x/nationals.png", rarity: "uncommon", chance: 15 },
+      { name: "Guardians", img: "https://i.postimg.cc/DZfz7Sg3/guardians-22-02-2026-10-14-07.png", rarity: "rare", chance: 10 },
+      { name: "Diamondbacks", img: "https://i.postimg.cc/qq3Hrr9M/diamondbacks.png", rarity: "rare", chance: 10 },
+      { name: "Reds", img: "https://i.postimg.cc/mgbZYcvy/reds.png", rarity: "rare", chance: 10 },
+      { name: "Rangers", img: "https://i.postimg.cc/nz7tbp8Z/rangers.png", rarity: "rare", chance: 10 },
+      { name: "Red Sox", img: "https://i.postimg.cc/RZqyx4KW/red-sox.png", rarity: "epic", chance: 5 },
+      { name: "Cubs", img: "https://i.postimg.cc/mZ8mLKb1/cubs.png", rarity: "epic", chance: 5 },
+      { name: "Mets", img: "https://i.postimg.cc/wjKLgksv/mets.png", rarity: "legendary", chance: 1 },
+      { name: "Angels", img: "https://i.postimg.cc/Vvnn27WZ/angels.png", rarity: "chroma", chance: 0.05 },
+      { name: "Brewers", img: "https://i.postimg.cc/JnbhLSSR/brewers.png", rarity: "chroma", chance: 0.05 },
+      { name: "Twins", img: "https://i.postimg.cc/xTXWNLTk/twins.png", rarity: "supreme", chance: 0.05 },
+      { name: "Mariners", img: "https://i.postimg.cc/prhqrYYT/mariners.png", rarity: "unique", chance: 0.05 },
+      { name: "Yankees", img: "https://i.postimg.cc/QtWfxJqx/yankees.png", rarity: "mystical", chance: 0.005 },
+      { name: "Phillies", img: "https://i.postimg.cc/8Cvv7Kxt/phillies.png", rarity: "godly", chance: 0.005 },
+      { name: "Dodgers", img: "https://i.postimg.cc/NfyjG9hh/dodgers.png", rarity: "heavenly", chance: 0.005 },
+      { name: "Blue Jays", img: "https://i.postimg.cc/qvJ0hzSp/blue-jays.png", rarity: "iridescent", chance: 0.005 },
+    ];
+
+  const packs = { og: ogPack, cat: catPack, dog: dogPack, dragon: dragonPack, pig: pigPack, crab: crabPack, bird: birdPack, rabbit: rabbitPack, butterfly: butterflyPack, pokemon: pokemonPack, remix: remixPack, baseball: baseballPack };
+
+  // UI setup
+  const ui = document.createElement('div');
+  ui.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    color: black;
+    font-family: Arial;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 0 15px gray;
+    border: 2px solid white;
+    max-width: 320px;
+  `;
+  ui.innerHTML = `
+    <strong style="font-size: 16px;">Pack Opener</strong><br><br>
+    <label>Pack:
+      <select id="cheat-pack" style="width: 100%; padding: 6px;">
+        <option value="og">OG</option>
+        <option value="cat">Cat</option>
+        <option value="dog">Dog</option>
+        <option value="dragon">Dragon</option>
+        <option value="pig">Pig</option>
+        <option value="crab">Crab</option>
+        <option value="bird">Bird</option>
+        <option value="rabbit">Rabbit</option>
+        <option value="butterfly">Butterfly</option>
+        <option value="pokemon">Pokemon</option>
+        <option value="remix">Remix</option>
+        <option value="baseball">Baseball</option>
+      </select>
+    </label><br><br>
+    <label>Amount:
+      <input id="cheat-amount" type="number" value="1" min="1" style="width: 100%; padding: 6px;">
+    </label><br><br>
+    <button id="cheat-open" style="width: 100%; background: lime; color: black; padding: 10px; font-weight: bold; border-radius: 6px; border: none;">Open Pack(s)</button>
+    <div id="cheat-result" style="margin-top: 10px;"></div>
+  `;
+  document.body.appendChild(ui);
+
+  // Logic for opening packs
+  document.getElementById('cheat-open').onclick = () => {
+    const pack = document.getElementById('cheat-pack').value;
+    const amount = parseInt(document.getElementById('cheat-amount').value);
+    const cost = PACK_COST[pack] * amount;
+
+    if (user.tokens < cost) {
+      alert(`You need ${cost} tokens, but only have ${user.tokens}`);
+      return;
+    }
+
+    const results = [];
+
+    for (let i = 0; i < amount; i++) {
+      // Calculate total chance for the pack
+      const totalChance = packs[pack].reduce((acc, blook) => acc + blook.chance, 0);
+      const rand = Math.random() * totalChance;
+      let sum = 0;
+      let reward = packs[pack][packs[pack].length - 1]; // fallback default
+
+      for (const blook of packs[pack]) {
+        sum += blook.chance;
+        if (rand <= sum) {
+          reward = blook;
+          break;
+        }
+      }
+
+      user.blooks = user.blooks || [];
+      user.blooks.push(reward);
+      results.push(reward.name);
+    }
+
+    user.tokens -= cost;
+    user.packsOpened = (user.packsOpened || 0) + amount;
+    users[currentUser] = user;
+    localStorage.setItem('fooditNewStorage', JSON.stringify(users));
+
+    // Update UI
+    const display = document.getElementById('token-count');
+    if (display) display.textContent = user.tokens.toLocaleString('en-US');
+
+    document.getElementById('cheat-result').textContent = ` You got: ${results.join(', ')}`;
+  };
+
+  console.log('%c Cheat code enabled: Open packs manually in bottom-right box.', 'color: black; font-weight: bold;');
+})();
