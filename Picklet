@@ -1,0 +1,195 @@
+(function () {
+  const currentUser = localStorage.getItem('fooditCurrentUser');
+  if (!currentUser) {
+    alert('No user is currently logged in.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('fooditNewStorage') || '{}');
+  const user = users[currentUser];
+  if (!user) {
+    alert('User data not found.');
+    return;
+  }
+
+  const PACK_COST = {
+    hidden: 5000,
+    deepsea: 20,
+    dessert: 20,
+    toy: 20,
+    color: 25,
+    emoji: 25,
+    food: 25,
+    lucky: 250,
+  };
+
+   const hiddenPack = [ 
+      { name: "Lagoon", img: "https://picklet.party/avatars/hidden/lagoon.svg", rarity: "mythical", chance: 10 },
+      { name: "Picklet", img: "https://picklet.party/avatars/hidden/picklet.svg", rarity: "hidden", chance: 10 },
+      { name: "Mango", img: "https://picklet.party/avatars/hidden/mango.webp", rarity: "hidden", chance: 10 },
+      { name: "Day 1", img: "https://picklet.party/avatars/hidden/day1.webp", rarity: "pickled", chance: 10 },
+      { name: "Picklenaut", img: "https://picklet.party/avatars/space/picklenaut.svg", rarity: "pickled", chance: 10 },
+    ];
+    
+    const deepseaPack = [ 
+      { name: "Dumbo Octopus", img: "https://picklet.party/avatars/deepsea/dumbooctopus.webp", rarity: "uncommon", chance: 15 },
+      { name: "Sea Pickle", img: "https://picklet.party/avatars/deepsea/seapickle.webp", rarity: "rare", chance: 10 },
+      { name: "Anglerfish", img: "https://picklet.party/avatars/deepsea/anglerfish.webp", rarity: "epic", chance: 5 },
+      { name: "Giant Squid", img: "https://picklet.party/avatars/deepsea/giantsquid.webp", rarity: "legendary", chance: 1 },
+      { name: "Kraken", img: "https://picklet.party/avatars/deepsea/kraken.webp", rarity: "hidden", chance: 0.005 },
+      { name: "Phantom Kraken", img: "https://picklet.party/avatars/deepsea/phantomkraken.webp", rarity: "pickled", chance: 0.005 },
+    ];
+    
+    const dessertPack = [ 
+      { name: "Chocolate Bar", img: "https://picklet.party/avatars/dessert/chocolate.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cookie", img: "https://picklet.party/avatars/dessert/cookie.webp", rarity: "uncommon", chance: 15 },
+      { name: "Gelatin", img: "https://picklet.party/avatars/dessert/gelatin.webp", rarity: "rare", chance: 10 },
+      { name: "Ice Cream", img: "https://picklet.party/avatars/dessert/icecream.webp", rarity: "rare", chance: 10 },
+      { name: "Egg Custard", img: "https://picklet.party/avatars/dessert/caramelpudding.webp", rarity: "epic", chance: 5 },
+      { name: "Macaron", img: "https://picklet.party/avatars/dessert/macaroon.webp", rarity: "legendary", chance: 1 },
+      { name: "Ice Cream Sandwich", img: "https://picklet.party/avatars/dessert/icecreamsandwich.webp", rarity: "hidden", chance: 0.005 },
+      { name: "Gelatin Combination", img: "https://picklet.party/avatars/dessert/gelatincombination.webp", rarity: "pickled", chance: 0.005 },
+    ];
+    
+    const toyPack = [ 
+      { name: "Jack in the Box", img: "https://picklet.party/avatars/toy/jack-in-the-box.svg", rarity: "common", chance: 20 },
+      { name: "Slinky", img: "https://picklet.party/avatars/toy/slinky.svg", rarity: "uncommon", chance: 15 },
+      { name: "Yo-Yo", img: "https://picklet.party/avatars/toy/yo-yo.svg", rarity: "common", chance: 20 },
+      { name: "Puzzle Cube", img: "https://picklet.party/avatars/toy/puzzle-cube.svg", rarity: "uncommon", chance: 15 },
+      { name: "Bouncy Ball", img: "https://picklet.party/avatars/toy/base.svg", rarity: "rare", chance: 10 },
+      { name: "Baseball Bat", img: "https://picklet.party/avatars/toy/baseballbat.svg", rarity: "legendary", chance: 1 },
+      { name: "Toy Car", img: "https://picklet.party/avatars/toy/toycar.svg", rarity: "legendary", chance: 1 },
+      { name: "Wind Up Robot", img: "https://picklet.party/avatars/toy/winduprobot.svg", rarity: "pickled", chance: 0.005 },
+    ];
+    
+    const emojiPack = [ 
+      { name: "Confused Emoji", img: "https://picklet.party/avatars/emoji/confused.svg", rarity: "common", chance: 20 },
+      { name: "Happy Emoji", img: "https://picklet.party/avatars/emoji/happy.svg", rarity: "common", chance: 20 },
+      { name: "Joy Emoji", img: "https://picklet.party/avatars/emoji/joy.svg", rarity: "common", chance: 20 },
+      { name: "Ghost Emoji", img: "https://picklet.party/avatars/emoji/ghost.svg", rarity: "uncommon", chance: 15 },
+      { name: "Party Emoji", img: "https://picklet.party/avatars/emoji/party.svg", rarity: "rare", chance: 10 },
+      { name: "Poop Emoji", img: "https://picklet.party/avatars/emoji/poop.svg", rarity: "legendary", chance: 1 },
+      { name: "Upside Down Party", img: "https://picklet.party/avatars/emoji/upsidedownparty.svg", rarity: "mythical", chance: 0.05 },
+      { name: "Sob Emoji", img: "https://picklet.party/avatars/emoji/sob.webp", rarity: "pickled", chance: 0.005 },
+    ];
+    
+    const luckyPack = [ 
+      { name: "Lucky Coin", img: "https://picklet.party/avatars/stpatricks/luckycoin.webp", rarity: "rare", chance: 10 },
+      { name: "Lucky Pickle", img: "https://picklet.party/avatars/stpatricks/luckypickle.webp", rarity: "rare", chance: 10 },
+      { name: "Lucky SRN", img: "https://picklet.party/avatars/stpatricks/luckysrn.webp", rarity: "epic", chance: 5 },
+      { name: "Leprechaun", img: "https://picklet.party/avatars/stpatricks/leperchaun.svg", rarity: "legendary", chance: 1 },
+      { name: "Pot of Gold", img: "https://picklet.party/avatars/stpatricks/potofgold.webp", rarity: "mythical", chance: 0.05 },
+      { name: "Lucky Dragon", img: "https://picklet.party/avatars/stpatricks/luckydragon.webp", rarity: "pickled", chance: 0.005 },
+    ];
+    
+    const colorPack = [ 
+      { name: "Orange", img: "https://picklet.party/avatars/colors/orange.svg", rarity: "common", chance: 20 },
+      { name: "Red", img: "https://picklet.party/avatars/colors/red.svg", rarity: "common", chance: 20 },
+      { name: "Yellow", img: "https://picklet.party/avatars/colors/yellow.svg", rarity: "uncommon", chance: 15 },
+      { name: "Green", img: "https://picklet.party/avatars/colors/green.svg", rarity: "rare", chance: 10 },
+      { name: "Blue", img: "https://picklet.party/avatars/colors/blue.svg", rarity: "rare", chance: 10 },
+      { name: "Purple", img: "https://picklet.party/avatars/colors/purple.svg", rarity: "legendary", chance: 1 },
+      { name: "Rainbow", img: "https://picklet.party/avatars/colors/rainbow.svg", rarity: "hidden", chance: 0.005 },
+    ];
+    
+    const foodPack = [ 
+      { name: "Apple", img: "https://picklet.party/avatars/food/apple.svg", rarity: "uncommon", chance: 15 },
+      { name: "Pizza", img: "https://picklet.party/avatars/food/pizza.svg", rarity: "uncommon", chance: 15 },
+      { name: "Pancake", img: "https://picklet.party/avatars/food/pancake.svg", rarity: "rare", chance: 10 },
+      { name: "Fries", img: "https://picklet.party/avatars/food/fries.svg", rarity: "epic", chance: 5 },
+      { name: "Burger", img: "https://picklet.party/avatars/food/burger.svg", rarity: "epic", chance: 5 },
+      { name: "Chocolate", img: "https://picklet.party/avatars/food/chocolate.svg", rarity: "legendary", chance: 1 },
+      { name: "Cola", img: "https://picklet.party/avatars/food/cola.svg", rarity: "legendary", chance: 1 },
+      { name: "Apple Juice", img: "https://picklet.party/avatars/food/applejuice.svg", rarity: "mythical", chance: 0.05 },
+      { name: "Pickle", img: "https://picklet.party/avatars/food/pickle.webp", rarity: "mythical", chance: 0.05 },
+      { name: "Golden Pickle", img: "https://picklet.party/avatars/food/goldenpickle.webp", rarity: "pickled", chance: 0.005 },
+    ];
+
+  const packs = { hidden: hiddenPack, deepsea: deepseaPack, dessert: dessertPack, toy: toyPack, color: colorPack, emoji: emojiPack, food: foodPack, lucky: luckyPack };
+
+  // UI setup
+  const ui = document.createElement('div');
+  ui.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    color: black;
+    font-family: Arial;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 0 15px gray;
+    border: 2px solid white;
+    max-width: 320px;
+  `;
+  ui.innerHTML = `
+    <strong style="font-size: 16px;">Pack Opener</strong><br><br>
+    <label>Pack:
+      <select id="cheat-pack" style="width: 100%; padding: 6px;">
+        <option value="hidden">Hidden</option>
+        <option value="deepsea">Deep Sea</option>
+        <option value="dessert">Dessert</option>
+        <option value="toy">Toy</option>
+        <option value="color">Color</option>
+        <option value="emoji">Emoji</option>
+        <option value="food">Food</option>
+        <option value="lucky">Lucky</option>
+      </select>
+    </label><br><br>
+    <label>Amount:
+      <input id="cheat-amount" type="number" value="1" min="1" style="width: 100%; padding: 6px;">
+    </label><br><br>
+    <button id="cheat-open" style="width: 100%; background: black; color: white; padding: 10px; font-weight: bold; border-radius: 6px; border: none;">Open Pack(s)</button>
+    <div id="cheat-result" style="margin-top: 10px;"></div>
+  `;
+  document.body.appendChild(ui);
+
+  // Logic for opening packs
+  document.getElementById('cheat-open').onclick = () => {
+    const pack = document.getElementById('cheat-pack').value;
+    const amount = parseInt(document.getElementById('cheat-amount').value);
+    const cost = PACK_COST[pack] * amount;
+
+    if (user.tokens < cost) {
+      alert(`You need ${cost} tokens, but only have ${user.tokens}`);
+      return;
+    }
+
+    const results = [];
+
+    for (let i = 0; i < amount; i++) {
+      // Calculate total chance for the pack
+      const totalChance = packs[pack].reduce((acc, blook) => acc + blook.chance, 0);
+      const rand = Math.random() * totalChance;
+      let sum = 0;
+      let reward = packs[pack][packs[pack].length - 1]; // fallback default
+
+      for (const blook of packs[pack]) {
+        sum += blook.chance;
+        if (rand <= sum) {
+          reward = blook;
+          break;
+        }
+      }
+
+      user.blooks = user.blooks || [];
+      user.blooks.push(reward);
+      results.push(reward.name);
+    }
+
+    user.tokens -= cost;
+    user.packsOpened = (user.packsOpened || 0) + amount;
+    users[currentUser] = user;
+    localStorage.setItem('fooditNewStorage', JSON.stringify(users));
+
+    // Update UI
+    const display = document.getElementById('token-count');
+    if (display) display.textContent = user.tokens.toLocaleString('en-US');
+
+    document.getElementById('cheat-result').textContent = ` You got: ${results.join(', ')}`;
+  };
+
+  console.log('%c Cheat code enabled: Open packs manually in bottom-right box.', 'color: black; font-weight: bold;');
+})();
