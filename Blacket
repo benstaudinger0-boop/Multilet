@@ -1,0 +1,877 @@
+(function () {
+  const currentUser = localStorage.getItem('fooditCurrentUser');
+  if (!currentUser) {
+    alert('No user is currently logged in.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('fooditNewStorage') || '{}');
+  const user = users[currentUser];
+  if (!user) {
+    alert('User data not found.');
+    return;
+  }
+
+  const PACK_COST = {
+    bot: 25,
+    bug: 25,
+    dino: 25,
+    candy: 25,
+    fruit: 25,
+    magic: 25,
+    music: 25,
+    retro: 25,
+    space: 25,
+    autumn: 25,
+    combat: 25,
+    pirate: 25,
+    safari: 25,
+    scifi: 25,
+    spooky: 25,
+    sports: 25,
+    summer: 25,
+    aquatic: 25,
+    dessert: 25,
+    outback: 25,
+    science: 25,
+    blizzard: 25,
+    gemstone: 25,
+    medieval: 25,
+    breakfast: 25,
+    elemental: 25,
+    videogame: 25,
+    wonderland: 25,
+    icemonster: 25,
+    og: 25,
+    time: 25,
+    ankha: 25,
+    color: 25,
+    peeps: 500,
+    lucky: 30,
+    clover: 30,
+    horror: 50,
+    lovely: 500,
+    spring: 30,
+    tte: 10000,
+    miscellanous: 5000
+  };
+
+   const dinoPack = [
+      { name: "Amber", img: "https://blacket.org/content/blooks/Amber.webp", rarity: "uncommon", chance: 15 },
+      { name: "Dino Egg", img: "https://blacket.org/content/blooks/Dino%20Egg.webp", rarity: "uncommon", chance: 15 },
+      { name: "Dino Fossil", img: "https://blacket.org/content/blooks/Dino%20Fossil.webp", rarity: "uncommon", chance: 15 },
+      { name: "Stegosaurus", img: "https://blacket.org/content/blooks/Stegosaurus.webp", rarity: "uncommon", chance: 15 },
+      { name: "Velociraptor", img: "https://blacket.org/content/blooks/Velociraptor.webp", rarity: "rare", chance: 10 },
+      { name: "Brontosaurus", img: "https://blacket.org/content/blooks/Brontosaurus.webp", rarity: "rare", chance: 10 },
+      { name: "Triceratops", img: "https://blacket.org/content/blooks/Triceratops.webp", rarity: "epic", chance: 5 },
+      { name: "Tyrannosaurus Rex", img: "https://blacket.org/content/blooks/Tyrannosaurus%20Rex.webp", rarity: "legendary", chance: 1 },
+      { name: "Golden Amber", img: "https://blacket.org/content/blooks/Golden%20Amber.webp", rarity: "chroma", chance: 0.05 },
+    ];
+
+    const bugPack = [
+      { name: "Ant", img: "https://blacket.org/content/blooks/Ant.webp", rarity: "uncommon", chance: 15 },
+      { name: "Rhino Beetle", img: "https://blacket.org/content/blooks/Rhinobeetle.webp", rarity: "uncommon", chance: 15 },
+      { name: "Ladybug", img: "https://blacket.org/content/blooks/Ladybug.webp", rarity: "uncommon", chance: 15 },
+      { name: "Fly", img: "https://blacket.org/content/blooks/Fly.webp", rarity: "uncommon", chance: 15 },
+      { name: "Worm", img: "https://blacket.org/content/blooks/Worm.webp", rarity: "rare", chance: 10 },
+      { name: "Bee", img: "https://blacket.org/content/blooks/Bee.webp", rarity: "rare", chance: 10 },
+      { name: "Mantis", img: "https://blacket.org/content/blooks/Mantis.webp", rarity: "epic", chance: 5 },
+      { name: "Butterfly", img: "https://blacket.org/content/blooks/Butterfly.webp", rarity: "legendary", chance: 1 },
+      { name: "Blue Butterfly", img: "https://blacket.org/content/blooks/Blue%20Butterfly.webp", rarity: "chroma", chance: 0.05 },
+    ];
+    
+    const blizzardPack = [
+      { name: "Snow Globe", img: "https://blacket.org/content/blooks/Snow%20Globe.webp", rarity: "uncommon", chance: 15 },
+      { name: "Holiday Gift", img: "https://blacket.org/content/blooks/Holiday%20Gift.webp", rarity: "uncommon", chance: 15 },
+      { name: "Hot Cocoa", img: "https://blacket.org/content/blooks/Hot%20Chocolate.webp", rarity: "uncommon", chance: 15 },
+      { name: "Wreath", img: "https://blacket.org/content/blooks/Holiday%20Wreath.webp", rarity: "uncommon", chance: 15 },
+      { name: "Stocking", img: "https://blacket.org/content/blooks/Stocking.webp", rarity: "uncommon", chance: 15 },
+      { name: "Gingerbread Man", img: "https://blacket.org/content/blooks/Gingerbread%20Man.webp", rarity: "rare", chance: 10 },
+      { name: "Gingerbread House", img: "https://blacket.org/content/blooks/Gingerbread%20House.webp", rarity: "rare", chance: 10 },
+      { name: "Reindeer", img: "https://blacket.org/content/blooks/Reindeer.webp", rarity: "rare", chance: 10 },
+      { name: "Snowman", img: "https://blacket.org/content/blooks/Snowman.webp", rarity: "epic", chance: 5 },
+      { name: "Santa Claus", img: "https://blacket.org/content/blooks/Santa%20Claus.webp", rarity: "legendary", chance: 1 },
+      { name: "Santa Claws", img: "https://blacket.org/content/blooks/Santa%20Claws.webp", rarity: "chroma", chance: 0.05 },
+      { name: "New York Snow Globe", img: "https://blacket.org/content/blooks/New%20York%20Snow%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "London Snow Globe", img: "https://blacket.org/content/blooks/London%20Snow%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Japan Snow Globe", img: "https://blacket.org/content/blooks/Japan%20Snow%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Egypt Snow Globe", img: "https://blacket.org/content/blooks/Egypt%20Snow%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Paris Snow Globe", img: "https://blacket.org/content/blooks/Paris%20Snow%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Cookies Combo", img: "https://blacket.org/content/blooks/Cookies%20Combo.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Frost Wreath", img: "https://blacket.org/content/blooks/Frost%20Wreath.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Tropical Globe", img: "https://blacket.org/content/blooks/Tropical%20Globe.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Chilly Flamingo", img: "https://blacket.org/content/blooks/Chilly%20Flamingo.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Snowy Bush Monster", img: "https://blacket.org/content/blooks/Snowy%20Bush%20Monster.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Red Sweater Snowman", img: "https://blacket.org/content/blooks/Red%20Sweater%20Snowman.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Blue Sweater Snowman", img: "https://blacket.org/content/blooks/Blue%20Sweater%20Snowman.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Elf Sweater Snowman", img: "https://blacket.org/content/blooks/Elf%20Sweater%20Snowman.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Nutcracker Koala", img: "https://blacket.org/content/blooks/Nutcracker%20Koala.webp", rarity: "chroma", chance: 0.05  },
+      { name: "Golden Gift", img: "https://blacket.org/content/blooks/Golden%20Gift.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Diamond Gift", img: "https://blacket.org/content/blooks/Diamond%20Gift.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Hamsta Claus", img: "https://blacket.org/content/blooks/Hamsta%20Claus.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const magicPack = [
+      { name: "Book of Spells", img: "https://blacket.org/content/blooks/Magic%20Spellbook.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cursed Ring", img: "https://blacket.org/content/blooks/Cursed%20Ring.webp", rarity: "uncommon", chance: 15 },
+      { name: "Bubbling Cauldron", img: "https://blacket.org/content/blooks/Bubbling%20Cauldron.webp", rarity: "uncommon", chance: 15 },
+      { name: "Fairy Dust", img: "https://blacket.org/content/blooks/Fairy%20Dust.webp", rarity: "uncommon", chance: 15 },
+      { name: "Magic Scroll", img: "https://blacket.org/content/blooks/Magic%20Scroll.webp", rarity: "uncommon", chance: 15 },
+      { name: "Magician's Wand", img: "https://blacket.org/content/blooks/Magician's%20Wand.webp", rarity: "rare", chance: 10 },
+      { name: "Crystal Ball", img: "https://blacket.org/content/blooks/Crystal%20Ball.webp", rarity: "rare", chance: 10 },
+      { name: "Ancient Runes", img: "https://blacket.org/content/blooks/Ancient%20Runes.webp", rarity: "rare", chance: 10 },
+      { name: "Enchantment Hall", img: "https://blacket.org/content/blooks/Enchantment%20Hall.webp", rarity: "epic", chance: 5 },
+      { name: "Strength Potion", img: "https://blacket.org/content/blooks/Strength%20Potion.webp", rarity: "epic", chance: 5 },
+      { name: "Magician's Hat", img: "https://blacket.org/content/blooks/Magician's%20Hat.webp", rarity: "legendary", chance: 1 },
+      { name: "Sentient Spellbook", img: "https://blacket.org/content/blooks/Sentient%20Spellbook.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Golden Magician's Wand", img: "https://blacket.org/content/blooks/Golden%20Magician's%20Wand.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Invisibility Cloak", img: "https://blacket.org/content/blooks/Invisibility%20Cloak.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const summerPack = [
+    { name: "Sand Bucket", img: "https://blacket.org/content/blooks/Sand%20Bucket.webp", rarity: "uncommon", chance: 15 },
+    { name: "Beach Ball", img: "https://blacket.org/content/blooks/Beach%20Ball.webp", rarity: "uncommon", chance: 15 },
+    { name: "Plastic Shovel", img: "https://blacket.org/content/blooks/Plastic%20Shovel.webp", rarity: "uncommon", chance: 15 },
+    { name: "Popsicle", img: "https://blacket.org/content/blooks/Popsicle.webp", rarity: "uncommon", chance: 15 },
+    { name: "Life Float", img: "https://blacket.org/content/blooks/Life%20Float.webp", rarity: "rare", chance: 10 },
+    { name: "Conch Shell", img: "https://blacket.org/content/blooks/Conch%20Shell.webp", rarity: "rare", chance: 10 },
+    { name: "Surfboard", img: "https://blacket.org/content/blooks/Surfboard.webp", rarity: "epic", chance: 5 },
+    { name: "Sand Castle", img: "https://blacket.org/content/blooks/Sand%20Castle.webp", rarity: "legendary", chance: 1 },
+    { name: "Coconut Cocktail", img: "https://blacket.org/content/blooks/Coconut%20Cocktail.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Tropical Pig", img: "https://blacket.org/content/blooks/Tropical%20Pig.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const piratePack = [
+    { name: "Deckhand", img: "https://blacket.org/content/blooks/Deckhand.webp", rarity: "uncommon", chance: 15 },
+    { name: "Buccaneer", img: "https://blacket.org/content/blooks/Buccaneer.webp", rarity: "uncommon", chance: 15 },
+    { name: "Swashbuckler", img: "https://blacket.org/content/blooks/Swashbuckler.webp", rarity: "uncommon", chance: 15 },
+    { name: "Treasure Map", img: "https://blacket.org/content/blooks/Treasure%20Map.webp", rarity: "uncommon", chance: 15 },
+    { name: "Seagull", img: "https://blacket.org/content/blooks/Seagull.webp", rarity: "uncommon", chance: 15 },
+    { name: "Jolly Pirate", img: "https://blacket.org/content/blooks/Jolly%20Pirate.webp", rarity: "rare", chance: 10 },
+    { name: "Pirate Ship", img: "https://blacket.org/content/blooks/Pirate%20Ship.webp", rarity: "rare", chance: 10 },
+    { name: "Sea Monster", img: "https://blacket.org/content/blooks/Sea%20Monster.webp", rarity: "epic", chance: 5 },
+    { name: "Captain Blackbeard", img: "https://blacket.org/content/blooks/Captain%20Blackbeard.webp", rarity: "legendary", chance: 1 },
+    { name: "Pirate Pufferfish", img: "https://blacket.org/content/blooks/Pirate%20Pufferfish.webp", rarity: "chroma", chance: 0.05 },
+    ];
+    
+    const colorPack = [
+    { name: "Brown Blook", img: "https://blacket.org/content/blooks/Brown%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Dull Blue Blook", img: "https://blacket.org/content/blooks/Dull%20Blue%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Dust Blook", img: "https://blacket.org/content/blooks/Dust%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Maroon Blook", img: "https://blacket.org/content/blooks/Maroon%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Tan Blook", img: "https://blacket.org/content/blooks/Tan%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Baby Blue Blook", img: "https://blacket.org/content/blooks/Baby%20Blue%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Gray Blook", img: "https://blacket.org/content/blooks/Gray%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Light Blue Blook", img: "https://blacket.org/content/blooks/Light%20Blue%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Lime Blook", img: "https://blacket.org/content/blooks/Lime%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Orange Blook", img: "https://blacket.org/content/blooks/Orange%20Blook.webp", rarity: "uncommon", chance: 15 },
+    { name: "Blue Blook", img: "https://blacket.org/content/blooks/Blue%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Salmon Blook", img: "https://blacket.org/content/blooks/Salmon%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Teal Blook", img: "https://blacket.org/content/blooks/Teal%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Burgandy Blook", img: "https://blacket.org/content/blooks/Burgandy%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Green Blook", img: "https://blacket.org/content/blooks/Green%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Mint Blook", img: "https://blacket.org/content/blooks/Mint%20Blook.webp", rarity: "rare", chance: 10 },
+    { name: "Purple Blook", img: "https://blacket.org/content/blooks/Purple%20Blook.webp", rarity: "epic", chance: 5 },
+    { name: "Yellow Blook", img: "https://blacket.org/content/blooks/Yellow%20Blook.webp", rarity: "epic", chance: 5 },
+    { name: "Red Blook", img: "https://blacket.org/content/blooks/Red%20Blook.webp", rarity: "epic", chance: 5 },
+    { name: "White Blook", img: "https://blacket.org/content/blooks/White%20Blook.webp", rarity: "legendary", chance: 1 },
+    { name: "Black Blook", img: "https://blacket.org/content/blooks/Black%20Blook.webp", rarity: "legendary", chance: 1 },
+    { name: "Pink Blook", img: "https://blacket.org/content/blooks/Pink%20Blook.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Rainbow Blook", img: "https://blacket.org/content/blooks/Rainbow%20Blook.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const spookyPack = [
+    { name: "Pumpkin", img: "https://blacket.org/content/blooks/Pumpkin.webp", rarity: "uncommon", chance: 15 },
+    { name: "Swamp Monster", img: "https://blacket.org/content/blooks/Swamp%20Monster.webp", rarity: "uncommon", chance: 15 },
+    { name: "Frankenstein", img: "https://blacket.org/content/blooks/Frankenstein.webp", rarity: "uncommon", chance: 15 },
+    { name: "Vampire", img: "https://blacket.org/content/blooks/Vampire.webp", rarity: "uncommon", chance: 15 },
+    { name: "Zombie", img: "https://blacket.org/content/blooks/Zombie.webp", rarity: "rare", chance: 10 },
+    { name: "Mummy", img: "https://blacket.org/content/blooks/Mummy.webp", rarity: "rare", chance: 10 },
+    { name: "Crow", img: "https://blacket.org/content/blooks/Crow.webp", rarity: "rare", chance: 10 },
+    { name: "Skeleton", img: "https://blacket.org/content/blooks/Skeleton.webp", rarity: "rare", chance: 10 },
+    { name: "Caramel Apple", img: "https://blacket.org/content/blooks/Caramel%20Apple.webp", rarity: "rare", chance: 10 },
+    { name: "Werewolf", img: "https://blacket.org/content/blooks/Werewolf.webp", rarity: "epic", chance: 5 },
+    { name: "Ghost", img: "https://blacket.org/content/blooks/Ghost.webp", rarity: "legendary", chance: 1 },
+    { name: "Haunted Pumpkin", img: "https://blacket.org/content/blooks/Haunted%20Pumpkin.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Pumpkin Cookie", img: "https://blacket.org/content/blooks/Pumpkin%20Cookie.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Mummy Cookie", img: "https://blacket.org/content/blooks/Mummy%20Cookie.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Ghost Cookie", img: "https://blacket.org/content/blooks/Ghost%20Cookie.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Red Gummy Bear", img: "https://blacket.org/content/blooks/Red%20Gummy%20Bear.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Green Gummy Bear", img: "https://blacket.org/content/blooks/Green%20Gummy%20Bear.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Blue Gummy Bear", img: "https://blacket.org/content/blooks/Blue%20Gummy%20Bear.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Haunted Cookie", img: "https://blacket.org/content/blooks/Haunted%20Cookie.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Chick Chicken", img: "https://blacket.org/content/blooks/Chick%20Chicken.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Chicken Chick", img: "https://blacket.org/content/blooks/Chicken%20Chick.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Raccoon Bandit", img: "https://blacket.org/content/blooks/Raccoon%20Bandit.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Owl Sheriff", img: "https://blacket.org/content/blooks/Owl%20Sheriff.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Anaconda Wizard", img: "https://blacket.org/content/blooks/Anaconda%20Wizard.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Vampire Frog", img: "https://blacket.org/content/blooks/Vampire%20Frog.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Pumpkin King", img: "https://blacket.org/content/blooks/Pumpkin%20King.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Spooky Cookie", img: "https://blacket.org/content/blooks/Spooky%20Cookie.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Spooky Pumpkin", img: "https://blacket.org/content/blooks/Spooky%20Pumpkin.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Spooky Mummy", img: "https://blacket.org/content/blooks/Spooky%20Mummy.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Spooky Skeleton", img: "https://blacket.org/content/blooks/Spooky%20Skeleton.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Spooky Ghost", img: "https://blacket.org/content/blooks/Spooky%20Ghost.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const medievalPack = [
+    { name: "Elf", img: "https://blacket.org/content/blooks/Elf.webp", rarity: "uncommon", chance: 15 },
+    { name: "Witch", img: "https://blacket.org/content/blooks/Witch.webp", rarity: "uncommon", chance: 15 },
+    { name: "Wizard", img: "https://blacket.org/content/blooks/Wizard.webp", rarity: "uncommon", chance: 15 },
+    { name: "Fairy", img: "https://blacket.org/content/blooks/Fairy.webp", rarity: "uncommon", chance: 15 },
+    { name: "Slime Monster", img: "https://blacket.org/content/blooks/Slime%20Monster.webp", rarity: "uncommon", chance: 15 },
+    { name: "Jester", img: "https://blacket.org/content/blooks/Jester.webp", rarity: "rare", chance: 10 },
+    { name: "Dragon", img: "https://blacket.org/content/blooks/Dragon.webp", rarity: "rare", chance: 10 },
+    { name: "Queen", img: "https://blacket.org/content/blooks/Queen.webp", rarity: "rare", chance: 10 },
+    { name: "Unicorn", img: "https://blacket.org/content/blooks/Unicorn.webp", rarity: "epic", chance: 5 },
+    { name: "King", img: "https://blacket.org/content/blooks/King.webp", rarity: "legendary", chance: 1 },
+    { name: "Agent Owl", img: "https://blacket.org/content/blooks/Agent%20Owl.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Wise Owl", img: "https://blacket.org/content/blooks/Wise%20Owl.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Master Elf", img: "https://blacket.org/content/blooks/Master%20Elf.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Phantom King", img: "https://blacket.org/content/blooks/Phantom%20King.webp", rarity: "mythical", chance: 0.005 },
+    { name: "Dark Dragon", img: "https://blacket.org/content/blooks/Dark%20Dragon.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const videogamePack = [
+    { name: "Pac-Man", img: "https://blacket.org/content/blooks/Pac-Man.webp", rarity: "uncommon", chance: 15 },
+    { name: "Space Invader", img: "https://blacket.org/content/blooks/Space%20Invader.webp", rarity: "uncommon", chance: 15 },
+    { name: "Among Us", img: "https://blacket.org/content/blooks/Among%20Us.webp", rarity: "uncommon", chance: 15 },
+    { name: "Poke Ball", img: "https://blacket.org/content/blooks/Poke%20Ball.webp", rarity: "uncommon", chance: 15 },
+    { name: "Flappy Bird", img: "https://blacket.org/content/blooks/Flappy%20Bird.webp", rarity: "uncommon", chance: 15 },
+    { name: "Goomba", img: "https://blacket.org/content/blooks/Goomba.webp", rarity: "rare", chance: 10 },
+    { name: "Big Shield", img: "https://blacket.org/content/blooks/Big%20Shield.webp", rarity: "rare", chance: 10 },
+    { name: "Creeper", img: "https://blacket.org/content/blooks/Creeper.webp", rarity: "rare", chance: 10 },
+    { name: "Red Bird", img: "https://blacket.org/content/blooks/Red%20Bird.webp", rarity: "epic", chance: 5 },
+    { name: "Companion Cube", img: "https://blacket.org/content/blooks/Companion%20Cube.webp", rarity: "epic", chance: 5 },
+    { name: "Enderman", img: "https://blacket.org/content/blooks/Enderman.webp", rarity: "legendary", chance: 1 },
+    { name: "Master Chief", img: "https://blacket.org/content/blooks/Master%20Chief.webp", rarity: "legendary", chance: 1 },
+    { name: "Golden Among Us", img: "https://blacket.org/content/blooks/Golden%20Among%20Us.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Puffed Pig", img: "https://blacket.org/content/blooks/Puffed%20Pig.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Gaming Mouse", img: "https://blacket.org/content/blooks/Gaming%20Mouse.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const combatPack = [
+    { name: "Viking Helmet", img: "https://blacket.org/content/blooks/Viking%20Helmet.webp", rarity: "uncommon", chance: 15 },
+    { name: "Iron Chestplate", img: "https://blacket.org/content/blooks/Iron%20Chestplate.webp", rarity: "uncommon", chance: 15 },
+    { name: "Spiked Boot", img: "https://blacket.org/content/blooks/Spiked%20Boot.webp", rarity: "uncommon", chance: 15 },
+    { name: "Silver Shuriken", img: "https://blacket.org/content/blooks/Silver%20Shuriken.webp", rarity: "uncommon", chance: 15 },
+    { name: "Knight Shield", img: "https://blacket.org/content/blooks/Knight%20Shield.webp", rarity: "rare", chance: 10 },
+    { name: "Knight Sword", img: "https://blacket.org/content/blooks/Knight%20Sword.webp", rarity: "rare", chance: 10 },
+    { name: "Fragment Grenade", img: "https://blacket.org/content/blooks/Fragment%20Grenade.webp", rarity: "epic", chance: 5 },
+    { name: "M12 Shotgun", img: "https://blacket.org/content/blooks/M12%20Shotgun.webp", rarity: "legendary", chance: 1 },
+    { name: "M67 Grenade", img: "https://blacket.org/content/blooks/M67%20Grenade.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Diamond Sword", img: "https://blacket.org/content/blooks/Diamond%20Sword.webp", rarity: "mythical", chance: 0.005 },
+    { name: "Golden Shuriken", img: "https://blacket.org/content/blooks/Golden%20Shuriken.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const aquaticPack = [
+    { name: "Old Boot", img: "https://blacket.org/content/blooks/Old%20Boot.webp", rarity: "uncommon", chance: 15 },
+    { name: "Jellyfish", img: "https://blacket.org/content/blooks/Jellyfish.webp", rarity: "uncommon", chance: 15 },
+    { name: "Clownfish", img: "https://blacket.org/content/blooks/Clownfish.webp", rarity: "uncommon", chance: 15 },
+    { name: "Frog", img: "https://blacket.org/content/blooks/Frog.webp", rarity: "uncommon", chance: 15 },
+    { name: "Crab", img: "https://blacket.org/content/blooks/Crab.webp", rarity: "uncommon", chance: 15 },
+    { name: "Pufferfish", img: "https://blacket.org/content/blooks/Pufferfish.webp", rarity: "rare", chance: 10 },
+    { name: "Blobfish", img: "https://blacket.org/content/blooks/Blobfish.webp", rarity: "rare", chance: 10 },
+    { name: "Octopus", img: "https://blacket.org/content/blooks/Octopus.webp", rarity: "rare", chance: 10 },
+    { name: "Narwhal", img: "https://blacket.org/content/blooks/Narwhal.webp", rarity: "epic", chance: 5 },
+    { name: "Dolphin", img: "https://blacket.org/content/blooks/Dolphin.webp", rarity: "epic", chance: 5 },
+    { name: "Baby Shark", img: "https://blacket.org/content/blooks/Baby%20Shark.webp", rarity: "legendary", chance: 1 },
+    { name: "Megalodon", img: "https://blacket.org/content/blooks/Megalodon.webp", rarity: "legendary", chance: 1 },
+    { name: "Lovely Frog", img: "https://blacket.org/content/blooks/Lovely%20Frog.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Lucky Frog", img: "https://blacket.org/content/blooks/Lucky%20Frog.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Spring Frog", img: "https://blacket.org/content/blooks/Spring%20Frog.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Rainbow Jellyfish", img: "https://blacket.org/content/blooks/Rainbow%20Jellyfish.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Blizzard Clownfish", img: "https://blacket.org/content/blooks/Blizzard%20Clownfish.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Poison Dart Frog", img: "https://blacket.org/content/blooks/Poison%20Dart%20Frog.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Lemon Crab", img: "https://blacket.org/content/blooks/Lemon%20Crab.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Crimson Octopus", img: "https://blacket.org/content/blooks/Crimson%20Octopus.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Donut Blobfish", img: "https://blacket.org/content/blooks/Donut%20Blobfish.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Rainbow Narwhal", img: "https://blacket.org/content/blooks/Rainbow%20Narwhal.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Pirhana", img: "https://blacket.org/content/blooks/Pirahnna.webp", rarity: "supreme", chance: 0.05 },
+    { name: "Kraken", img: "https://blacket.org/content/blooks/Kraken.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const candyPack = [
+      { name: "Candy Corn", img: "https://blacket.org/content/blooks/Candy%20Corn.webp", rarity: "uncommon", chance: 15 },
+      { name: "Jellybean", img: "https://blacket.org/content/blooks/Jellybean.webp", rarity: "uncommon", chance: 15 },
+      { name: "Lollipop", img: "https://blacket.org/content/blooks/Lollipop.webp", rarity: "uncommon", chance: 15 },
+      { name: "Black Licorice", img: "https://blacket.org/content/blooks/Black%20Licorice.webp", rarity: "uncommon", chance: 15 },
+      { name: "Peppermint", img: "https://blacket.org/content/blooks/Peppermint.webp", rarity: "rare", chance: 10 },
+      { name: "Chocolate", img: "https://blacket.org/content/blooks/Chocolate.webp", rarity: "rare", chance: 10 },
+      { name: "Gummy Worm", img: "https://blacket.org/content/blooks/Gummy%20Worm.webp", rarity: "epic", chance: 5 },
+      { name: "Rock Candy", img: "https://blacket.org/content/blooks/Rock%20Candy.webp", rarity: "legendary", chance: 1 },
+      { name: "White Chocolate", img: "https://blacket.org/content/blooks/White%20Chocolate.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Red Licorice", img: "https://blacket.org/content/blooks/Red%20Licorice.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Blue Gummy Worm", img: "https://blacket.org/content/blooks/Blue%20Gummy%20Worm.webp", rarity: "chroma", chance: 0.05 },
+    ];
+    
+    const musicPack = [
+    { name: "Sheet Music", img: "https://blacket.org/content/blooks/Sheet%20Music.webp", rarity: "uncommon", chance: 15 },
+    { name: "Music Disc", img: "https://blacket.org/content/blooks/Music%20Disc.webp", rarity: "uncommon", chance: 15 },
+    { name: "Xylophone", img: "https://blacket.org/content/blooks/Xylophone.webp", rarity: "uncommon", chance: 15 },
+    { name: "Drums", img: "https://blacket.org/content/blooks/Drums.webp", rarity: "uncommon", chance: 15 },
+    { name: "Metronome", img: "https://blacket.org/content/blooks/Metronome.webp", rarity: "rare", chance: 10 },
+    { name: "Triangle", img: "https://blacket.org/content/blooks/Triangle.webp", rarity: "rare", chance: 10 },
+    { name: "Speaker", img: "https://blacket.org/content/blooks/Speaker.webp", rarity: "epic", chance: 5 },
+    { name: "Piano", img: "https://blacket.org/content/blooks/Piano.webp", rarity: "legendary", chance: 1 },
+    { name: "White Piano", img: "https://blacket.org/content/blooks/White%20Piano.webp", rarity: "chroma", chance: 0.05 },
+    { name: "Golden Harp", img: "https://blacket.org/content/blooks/Golden%20Harp.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const sportsPack = [
+      { name: "Basketball", img: "https://blacket.org/content/blooks/Basketball.webp", rarity: "uncommon", chance: 15 },
+      { name: "Baseball", img: "https://blacket.org/content/blooks/Baseball.webp", rarity: "uncommon", chance: 15 },
+      { name: "Soccer Ball", img: "https://blacket.org/content/blooks/Soccer%20Ball.webp", rarity: "uncommon", chance: 15 },
+      { name: "Tennis Ball", img: "https://blacket.org/content/blooks/Tennis%20Ball.webp", rarity: "uncommon", chance: 15 },
+      { name: "Golf Ball", img: "https://blacket.org/content/blooks/Golf%20Ball.webp", rarity: "uncommon", chance: 15 },
+      { name: "Football", img: "https://blacket.org/content/blooks/Football.webp", rarity: "rare", chance: 10 },
+      { name: "Bowling Ball", img: "https://blacket.org/content/blooks/Bowling%20Ball.webp", rarity: "rare", chance: 10 },
+      { name: "Ping-Pong Racket", img: "https://blacket.org/content/blooks/Ping%20Pong%20Racket.webp", rarity: "rare", chance: 10 },
+      { name: "Curling Stone", img: "https://blacket.org/content/blooks/Curling%20Stone.webp", rarity: "epic", chance: 5 },
+      { name: "Football Helmet", img: "https://blacket.org/content/blooks/Football%20Helmet.webp", rarity: "legendary", chance: 1 },
+      { name: "Red Bowling Ball", img: "https://blacket.org/content/blooks/Red%20Bowling%20Ball.webp", rarity: "chroma", chance: 0.05 },
+      ];
+    
+    const botPack = [
+      { name: "Lil Bot", img: "https://blacket.org/content/blooks/Lil%20Bot.webp", rarity: "uncommon", chance: 15 },
+      { name: "Lovely Bot", img: "https://blacket.org/content/blooks/Lovely%20Bot.webp", rarity: "uncommon", chance: 15 },
+      { name: "Angry Bot", img: "https://blacket.org/content/blooks/Angry%20Bot.webp", rarity: "uncommon", chance: 15 },
+      { name: "Happy Bot", img: "https://blacket.org/content/blooks/Happy%20Bot.webp", rarity: "uncommon", chance: 15 },
+      { name: "Watson", img: "https://blacket.org/content/blooks/Watson.webp", rarity: "rare", chance: 10 },
+      { name: "Buddy Bot", img: "https://blacket.org/content/blooks/Buddy%20Bot.webp", rarity: "rare", chance: 10 },
+      { name: "Brainy Bot", img: "https://blacket.org/content/blooks/Brainy%20Bot.webp", rarity: "epic", chance: 5 },
+      { name: "Mega Bot", img: "https://blacket.org/content/blooks/Mega%20Bot.webp", rarity: "legendary", chance: 1 },
+      { name: "Catson", img: "https://blacket.org/content/blooks/Catson.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Forgotten Bot", img: "https://blacket.org/content/blooks/Forgotten%20Bot.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const gemstonePack = [
+      { name: "Jasper", img: "https://blacket.org/content/blooks/Jasper.webp", rarity: "uncommon", chance: 15 },
+      { name: "Jade", img: "https://blacket.org/content/blooks/Jade.webp", rarity: "uncommon", chance: 15 },
+      { name: "Onyx", img: "https://blacket.org/content/blooks/Onyx.webp", rarity: "uncommon", chance: 15 },
+      { name: "Quartz", img: "https://blacket.org/content/blooks/Quartz.webp", rarity: "uncommon", chance: 15 },
+      { name: "Lapis Lazuli", img: "https://blacket.org/content/blooks/Lapis%20Lazuli.webp", rarity: "uncommon", chance: 15 },
+      { name: "Topaz", img: "https://blacket.org/content/blooks/Topaz.webp", rarity: "rare", chance: 10 },
+      { name: "Ruby", img: "https://blacket.org/content/blooks/Ruby.webp", rarity: "rare", chance: 10 },
+      { name: "Sapphire", img: "https://blacket.org/content/blooks/Sapphire.webp", rarity: "rare", chance: 10 },
+      { name: "Amethyst", img: "https://blacket.org/content/blooks/Amethyst.webp", rarity: "epic", chance: 5 },
+      { name: "Opal", img: "https://blacket.org/content/blooks/Opal.webp", rarity: "legendary", chance: 1 },
+      { name: "Moonstone", img: "https://blacket.org/content/blooks/Moonstone.webp", rarity: "legendary", chance: 1 },
+      { name: "Rose Quartz", img: "https://blacket.org/content/blooks/Rose%20Quartz.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Black Opal", img: "https://blacket.org/content/blooks/Black%20Opal.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const safariPack = [
+      { name: "Panda", img: "https://blacket.org/content/blooks/Panda.webp", rarity: "uncommon", chance: 15 },
+      { name: "Sloth", img: "https://blacket.org/content/blooks/Sloth.webp", rarity: "uncommon", chance: 15 },
+      { name: "Tenrec", img: "https://blacket.org/content/blooks/Tenrec.webp", rarity: "uncommon", chance: 15 },
+      { name: "Flamingo", img: "https://blacket.org/content/blooks/Flamingo.webp", rarity: "uncommon", chance: 15 },
+      { name: "Zebra", img: "https://blacket.org/content/blooks/Zebra.webp", rarity: "uncommon", chance: 15 },
+      { name: "Elephant", img: "https://blacket.org/content/blooks/Elephant.webp", rarity: "rare", chance: 10 },
+      { name: "Lemur", img: "https://blacket.org/content/blooks/Lemur.webp", rarity: "rare", chance: 10 },
+      { name: "Peacock", img: "https://blacket.org/content/blooks/Peacock.webp", rarity: "rare", chance: 10 },
+      { name: "Chameleon", img: "https://blacket.org/content/blooks/Chameleon.webp", rarity: "epic", chance: 5 },
+      { name: "Lion", img: "https://blacket.org/content/blooks/Lion.webp", rarity: "legendary", chance: 1 },
+      { name: "Rainbow Panda", img: "https://blacket.org/content/blooks/Rainbow%20Panda.webp", rarity: "chroma", chance: 0.05 },
+      { name: "White Peacock", img: "https://blacket.org/content/blooks/White%20Peacock.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Tiger Zebra", img: "https://blacket.org/content/blooks/Tiger%20Zebra.webp", rarity: "chroma", chance: 0.05 },
+      ];
+    
+    const lovelyPack = [
+      { name: "Candy Heart", img: "https://i.ibb.co/LzjfvjgY/Candy-Heart.png", rarity: "epic", chance: 70 },
+      { name: "Box of Chocolates", img: "https://i.ibb.co/wrjs9p8H/Box-of-Chocolates.png", rarity: "legendary", chance: 20 },
+      { name: "Box of White Chocolates", img: "https://i.ibb.co/CKg0SKrh/Box-of-White-Chocolates.png", rarity: "chroma", chance: 5 },
+      { name: "Valentines Present", img: "https://i.ibb.co/PvKxy3q7/Valentines-Present.png", rarity: "chroma", chance: 5 },
+      { name: "Engagement Ring", img: "https://i.ibb.co/9mSyJX6V/Untitled2244-20250214075547.png", rarity: "mythical", chance: 1 },
+      ];
+    
+    const timePack = [
+      { name: "Pocket Watch", img: "https://blacket.org/content/blooks/Pocket%20Watch.webp", rarity: "uncommon", chance: 15 },
+      { name: "Hourglass", img: "https://blacket.org/content/blooks/Hourglass.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cuckoo Clock", img: "https://blacket.org/content/blooks/Cuckoo%20Clock.webp", rarity: "uncommon", chance: 15 },
+      { name: "Calendar Scroll", img: "https://blacket.org/content/blooks/Calendar%20Scroll.webp", rarity: "uncommon", chance: 15 },
+      { name: "Analog Clock", img: "https://blacket.org/content/blooks/Analog%20Clock.webp", rarity: "uncommon", chance: 15 },
+      { name: "Astrolabe", img: "https://blacket.org/content/blooks/Astrolabe.webp", rarity: "rare", chance: 10 },
+      { name: "Time Capsule", img: "https://blacket.org/content/blooks/Time%20Capsule.webp", rarity: "rare", chance: 10 },
+      { name: "Orrey", img: "https://blacket.org/content/blooks/Orrey.webp", rarity: "rare", chance: 10 },
+      { name: "Grandfather Clock", img: "https://blacket.org/content/blooks/Grandfather%20Clock.webp", rarity: "epic", chance: 5 },
+      { name: "Clock Tower", img: "https://blacket.org/content/blooks/Clock%20Tower.webp", rarity: "legendary", chance: 1 },
+      { name: "Time Stone", img: "https://blacket.org/content/blooks/Time%20Stone.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Time Machine", img: "https://blacket.org/content/blooks/Time%20Machine.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const wonderlandPack = [
+      { name: "Two of Spades", img: "https://blacket.org/content/blooks/Two%20of%20Spades.webp", rarity: "uncommon", chance: 15 },
+      { name: "Eat Me", img: "https://blacket.org/content/blooks/Eat%20Me.webp", rarity: "uncommon", chance: 15 },
+      { name: "Drink Me", img: "https://blacket.org/content/blooks/Drink%20Me.webp", rarity: "uncommon", chance: 15 },
+      { name: "Alice", img: "https://blacket.org/content/blooks/Alice.webp", rarity: "uncommon", chance: 15 },
+      { name: "Queen of Hearts", img: "https://blacket.org/content/blooks/Queen%20of%20Hearts.webp", rarity: "uncommon", chance: 15 },
+      { name: "Dormouse", img: "https://blacket.org/content/blooks/Dormouse.webp", rarity: "rare", chance: 10 },
+      { name: "White Rabbit", img: "https://blacket.org/content/blooks/White%20Rabbit.webp", rarity: "rare", chance: 10 },
+      { name: "Cheshire Cat", img: "https://blacket.org/content/blooks/Cheshire%20Cat.webp", rarity: "rare", chance: 10 },
+      { name: "Caterpillar", img: "https://blacket.org/content/blooks/Caterpillar.webp", rarity: "epic", chance: 5 },
+      { name: "Mad Hatter", img: "https://blacket.org/content/blooks/Mad%20Hatter.webp", rarity: "epic", chance: 5 },
+      { name: "King of Hearts", img: "https://blacket.org/content/blooks/King%20of%20Hearts.webp", rarity: "legendary", chance: 1 },
+      { name: "Dinah", img: "https://blacket.org/content/blooks/Dinah.webp", rarity: "supreme", chance: 0.05 },
+      { name: "March Hare", img: "https://blacket.org/content/blooks/March%20Hare.webp", rarity: "supreme", chance: 0.05 },
+      ];
+    
+    const fruitPack = [
+      { name: "Apple", img: "https://blacket.org/content/blooks/Apple.webp", rarity: "uncommon", chance: 15 },
+      { name: "Orange", img: "https://blacket.org/content/blooks/Orange.webp", rarity: "uncommon", chance: 15 },
+      { name: "Lemon", img: "https://blacket.org/content/blooks/Lemon.webp", rarity: "uncommon", chance: 15 },
+      { name: "Lime", img: "https://blacket.org/content/blooks/Lime.webp", rarity: "uncommon", chance: 15 },
+      { name: "Grapes", img: "https://blacket.org/content/blooks/Grape.webp", rarity: "uncommon", chance: 15 },
+      { name: "Strawberry", img: "https://blacket.org/content/blooks/Strawberry.webp", rarity: "rare", chance: 10 },
+      { name: "Raspberry", img: "https://blacket.org/content/blooks/Raspberry.webp", rarity: "rare", chance: 10 },
+      { name: "Cherry", img: "https://blacket.org/content/blooks/Cherry.webp", rarity: "rare", chance: 10 },
+      { name: "Watermelon", img: "https://blacket.org/content/blooks/Watermelon.webp", rarity: "epic", chance: 5 },
+      { name: "Dragon Fruit", img: "https://blacket.org/content/blooks/Dragon%20Fruit.webp", rarity: "epic", chance: 5 },
+      { name: "Star Fruit", img: "https://blacket.org/content/blooks/Starfruit.webp", rarity: "legendary", chance: 1 },
+      { name: "Green Apple", img: "https://blacket.org/content/blooks/Green%20Apple.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Blue Raspberry", img: "https://blacket.org/content/blooks/Blue%20Raspberry.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Golden Apple", img: "https://blacket.org/content/blooks/Golden%20Apple.webp", rarity: "mythical", chance: 0.005 },
+    ];
+    
+    const scifiPack = [
+      { name: "Gravity Switcher", img: "https://blacket.org/content/blooks/Gravity%20Switcher.webp", rarity: "uncommon", chance: 15 },
+      { name: "Stealth Disguise Kit", img: "https://blacket.org/content/blooks/Stealth%20Disguise%20Kit.webp", rarity: "uncommon", chance: 15 },
+      { name: "Object Miniaturizer", img: "https://blacket.org/content/blooks/Object%20Miniaturizer.webp", rarity: "uncommon", chance: 15 },
+      { name: "Object Maximizer", img: "https://blacket.org/content/blooks/Object%20Maximizer.webp", rarity: "uncommon", chance: 15 },
+      { name: "Holographic Display", img: "https://blacket.org/content/blooks/Holographic%20Display.webp", rarity: "uncommon", chance: 15 },
+      { name: "Flying Car", img: "https://blacket.org/content/blooks/Flying%20Car.webp", rarity: "rare", chance: 10 },
+      { name: "Void Pistol", img: "https://blacket.org/content/blooks/Void%20Pistol.webp", rarity: "rare", chance: 10 },
+      { name: "Red Lightsaber", img: "https://blacket.org/content/blooks/Red%20Lightsaber.webp", rarity: "rare", chance: 10 },
+      { name: "Neural Implant", img: "https://blacket.org/content/blooks/Neural%20Implant.webp", rarity: "epic", chance: 5 },
+      { name: "Hijacked Radio", img: "https://blacket.org/content/blooks/Hijacked%20Radio.webp", rarity: "epic", chance: 5 },
+      { name: "Eternal Prism Blade", img: "https://blacket.org/content/blooks/Eternal%20Prism%20Blade.webp", rarity: "legendary", chance: 1 },
+      { name: "Blue Lightsaber", img: "https://blacket.org/content/blooks/Blue%20Lightsaber.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Hijacked Neural Implant", img: "https://blacket.org/content/blooks/Hijacked%20Neural%20Implant.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Celestial Oracle Staff", img: "https://blacket.org/content/blooks/Celestial%20Oracle%20Staff.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const breakfastPack = [
+      { name: "Toast", img: "https://blacket.org/content/blooks/Toast.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cereal", img: "https://blacket.org/content/blooks/Cereal.webp", rarity: "uncommon", chance: 15 },
+      { name: "Yogurt", img: "https://blacket.org/content/blooks/Yogurt.webp", rarity: "uncommon", chance: 15 },
+      { name: "Breakfast Combo", img: "https://blacket.org/content/blooks/Breakfast%20Combo.webp", rarity: "uncommon", chance: 15 },
+      { name: "Orange Juice", img: "https://blacket.org/content/blooks/Orange%20Juice.webp", rarity: "uncommon", chance: 15 },
+      { name: "Milk", img: "https://blacket.org/content/blooks/Milk.webp", rarity: "uncommon", chance: 15 },
+      { name: "Waffle", img: "https://blacket.org/content/blooks/Waffle.webp", rarity: "rare", chance: 10 },
+      { name: "Pancakes", img: "https://blacket.org/content/blooks/Pancakes.webp", rarity: "rare", chance: 10 },
+      { name: "French Toast", img: "https://blacket.org/content/blooks/French%20Toast.webp", rarity: "epic", chance: 5 },
+      { name: "Pizza", img: "https://blacket.org/content/blooks/Pizza.webp", rarity: "epic", chance: 5 },
+      { name: "Sandwich", img: "https://blacket.org/content/blooks/Sandwich.webp", rarity: "legendary", chance: 1 },
+      { name: "Chocolate Milk", img: "https://blacket.org/content/blooks/Chocolate%20Milk.webp", rarity: "chroma", chance: 0.05 },
+      ];
+    
+    const outbackPack = [
+      { name: "Dingo", img: "https://blacket.org/content/blooks/Dingo.webp", rarity: "uncommon", chance: 15 },
+      { name: "Echidna", img: "https://blacket.org/content/blooks/Echidna.webp", rarity: "uncommon", chance: 15 },
+      { name: "Koala", img: "https://blacket.org/content/blooks/Koala.webp", rarity: "uncommon", chance: 15 },
+      { name: "Kookaburra", img: "https://blacket.org/content/blooks/Kookaburra.webp", rarity: "uncommon", chance: 15 },
+      { name: "Platypus", img: "https://blacket.org/content/blooks/Platypus.webp", rarity: "rare", chance: 10 },
+      { name: "Joey", img: "https://blacket.org/content/blooks/Joey.webp", rarity: "rare", chance: 10 },
+      { name: "Kangaroo", img: "https://blacket.org/content/blooks/Kangaroo.webp", rarity: "rare", chance: 10 },
+      { name: "Crocodile", img: "https://blacket.org/content/blooks/Crocodile.webp", rarity: "epic", chance: 5 },
+      { name: "Sugar Glider", img: "https://blacket.org/content/blooks/Sugar%20Glider.webp", rarity: "legendary", chance: 1 },
+      { name: "Teal Platypus", img: "https://blacket.org/content/blooks/Teal%20Platypus.webp", rarity: "chroma", chance: 0.05 },
+      ];
+    
+    const retroPack = [
+      { name: "Dial Telephone", img: "https://blacket.org/content/blooks/Dial%20Telephone.webp", rarity: "uncommon", chance: 15 },
+      { name: "EtchASketch", img: "https://blacket.org/content/blooks/EtchASketch.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cassette Tape", img: "https://blacket.org/content/blooks/Cassette%20Tape.webp", rarity: "uncommon", chance: 15 },
+      { name: "Polaroid Camera", img: "https://blacket.org/content/blooks/Polaroid%20Camera.webp", rarity: "uncommon", chance: 15 },
+      { name: "Vending Machine", img: "https://blacket.org/content/blooks/Vending%20Machine.webp", rarity: "rare", chance: 15 },
+      { name: "TamaGotchi", img: "https://blacket.org/content/blooks/Tamagotchi.webp", rarity: "rare", chance: 10 },
+      { name: "GameBlook", img: "https://blacket.org/content/blooks/GameBlook.webp", rarity: "rare", chance: 10 },
+      { name: "Donkey Kong Machine", img: "https://blacket.org/content/blooks/Donkey%20Kong%20Machine.webp", rarity: "rare", chance: 10 },
+      { name: "Boom Box", img: "https://blacket.org/content/blooks/BoomBox.webp", rarity: "epic", chance: 5 },
+      { name: "CRT Television", img: "https://blacket.org/content/blooks/CRT%20Television.webp", rarity: "legendary", chance: 1 },
+      { name: "GameBlook Color", img: "https://blacket.org/content/blooks/GameBlook%20Color.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Pac-Man Machine", img: "https://blacket.org/content/blooks/PacMan%20Machine.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Blackintosh", img: "https://blacket.org/content/blooks/Blackintosh.webp", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const icemonsterPack = [
+      { name: "Ice Bat", img: "https://blacket.org/content/blooks/Ice%20Bat.webp", rarity: "uncommon", chance: 15 },
+      { name: "Ice Bug", img: "https://blacket.org/content/blooks/Ice%20Bug.webp", rarity: "uncommon", chance: 15 },
+      { name: "Ice Elemental", img: "https://blacket.org/content/blooks/Ice%20Elemental1.webp", rarity: "uncommon", chance: 15 },
+      { name: "Rock Monster", img: "https://blacket.org/content/blooks/Rock%20Monster.webp", rarity: "uncommon", chance: 15 },
+      { name: "Dink", img: "https://blacket.org/content/blooks/Dink.webp", rarity: "rare", chance: 10 },
+      { name: "Donk", img: "https://blacket.org/content/blooks/Donk.webp", rarity: "rare", chance: 10 },
+      { name: "Bush Monster", img: "https://blacket.org/content/blooks/Bush%20Monster.webp", rarity: "epic", chance: 5 },
+      { name: "Yeti", img: "https://blacket.org/content/blooks/Yeti.webp", rarity: "legendary", chance: 1 },
+      { name: "Ice Slime", img: "https://blacket.org/content/blooks/Ice%20Slime.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Frozen Fossil", img: "https://blacket.org/content/blooks/Frozen%20Fossil.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Ice Crab", img: "https://blacket.org/content/blooks/Ice%20Crab.webp", rarity: "chroma", chance: 0.05 },
+      ];
+      
+      const sciencePack = [
+      { name: "Magnet", img: "https://blacket.org/content/blooks/Magnet.webp", rarity: "uncommon", chance: 15 },
+      { name: "DNA", img: "https://blacket.org/content/blooks/DNA.webp", rarity: "uncommon", chance: 15 },
+      { name: "Scale", img: "https://blacket.org/content/blooks/Scale.webp", rarity: "uncommon", chance: 15 },
+      { name: "Beaker", img: "https://blacket.org/content/blooks/Beaker.webp", rarity: "uncommon", chance: 15 },
+      { name: "Blood Bag", img: "https://blacket.org/content/blooks/Blood%20Bag.webp", rarity: "uncommon", chance: 15 },
+      { name: "Magnifying Glass", img: "https://blacket.org/content/blooks/Magnifying%20Glass.webp", rarity: "uncommon", chance: 15 },
+      { name: "Battery", img: "https://blacket.org/content/blooks/Battery.webp", rarity: "uncommon", chance: 15 },
+      { name: "Atoms", img: "https://blacket.org/content/blooks/Atom.webp", rarity: "rare", chance: 10 },
+      { name: "Test Tubes", img: "https://blacket.org/content/blooks/Test%20Tubes.webp?1", rarity: "rare", chance: 10 },
+      { name: "Bunsen Burner", img: "https://blacket.org/content/blooks/Bunsen%20Burner.webp", rarity: "rare", chance: 10 },
+      { name: "Bacteria", img: "https://blacket.org/content/blooks/Bacteria.webp", rarity: "rare", chance: 10 },
+      { name: "Microscope", img: "https://blacket.org/content/blooks/Microscope.webp", rarity: "rare", chance: 10 },
+      { name: "Eyeball", img: "https://blacket.org/content/blooks/Eyeball.webp", rarity: "rare", chance: 10 },
+      { name: "Toxic Waste", img: "https://blacket.org/content/blooks/Toxic%20Waste.webp", rarity: "epic", chance: 5 },
+      { name: "Light Prism", img: "https://blacket.org/content/blooks/Prism.webp", rarity: "epic", chance: 5 },
+      { name: "Telescope", img: "https://blacket.org/content/blooks/Telescope.webp", rarity: "epic", chance: 5 },
+      { name: "Skull", img: "https://blacket.org/content/blooks/Skull.webp", rarity: "legendary", chance: 1 },
+      { name: "Light Bulb", img: "https://blacket.org/content/blooks/Lightbulb.webp", rarity: "legendary", chance: 1 },
+      { name: "Brain", img: "https://blacket.org/content/blooks/Brain.webp", rarity: "legendary", chance: 1 },
+      { name: "Flask", img: "https://blacket.org/content/blooks/Flask.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Petri Dish", img: "https://blacket.org/content/blooks/Petri%20Dish.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Albert Einstein", img: "https://blacket.org/content/blooks/Albert%20Einstein.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Neil DeGrasse Tyson", img: "https://blacket.org/content/blooks/Neil%20deGrasse%20Tyson.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Gregor Mendel", img: "https://blacket.org/content/blooks/Gregor%20Mendel.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Isaac Newton", img: "https://blacket.org/content/blooks/Isaac%20Newton.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Stephen Hawking", img: "https://blacket.org/content/blooks/Stephen%20Hawking.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Nicola Tesla", img: "https://blacket.org/content/blooks/Nikola%20Tesla.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Charles Darwin", img: "https://blacket.org/content/blooks/Charles%20Darwin.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Lava Lamp", img: "https://blacket.org/content/blooks/Lava%20Lamp.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Beating Heart", img: "https://blacket.org/content/blooks/Beating%20Heart.webp", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const dessertPack = [
+      { name: "Elderberry Pie", img: "https://blacket.org/content/blooks/Elderberry%20Pie.webp?1", rarity: "uncommon", chance: 15},
+      { name: "Cherry Pie", img: "https://blacket.org/content/blooks/Cherry%20Pie.webp", rarity: "uncommon", chance: 15 },
+      { name: "Donut", img: "https://blacket.org/content/blooks/Donut.webp", rarity: "uncommon", chance: 15 },
+      { name: "Flan", img: "https://blacket.org/content/blooks/Flan.webp", rarity: "uncommon", chance: 15 },
+      { name: "Chocolate Ice Cream", img: "https://blacket.org/content/blooks/Chocolate%20Ice%20Cream.webp", rarity: "rare", chance: 10 },
+      { name: "Strawberry Ice Cream", img: "https://blacket.org/content/blooks/Strawberry%20Ice%20Cream.webp", rarity: "rare", chance: 10 },
+      { name: "Raspberry Macaron", img: "https://blacket.org/content/blooks/Raspberry%20Macaroon.webp", rarity: "epic", chance: 5 },
+      { name: "Cake", img: "https://blacket.org/content/blooks/Cake.webp", rarity: "legendary", chance: 1 },
+      { name: "Blueberry Macaron", img: "https://blacket.org/content/blooks/Blueberry%20Macaroon.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Birthday Cake", img: "https://blacket.org/content/blooks/Birthday%20Cake.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Magic Chocolate", img: "https://blacket.org/content/blooks/Magic%20Chocolate.webp", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const elementalPack = [
+      { name: "Earth Elemental", img: "https://blacket.org/content/blooks/Nature%20Elemental1.webp", rarity: "uncommon", chance: 15 },
+      { name: "Fire Elemental", img: "https://blacket.org/content/blooks/Fire%20Elemental1.webp", rarity: "uncommon", chance: 15 },
+      { name: "Water Elemental", img: "https://blacket.org/content/blooks/Water%20Elemental1.webp", rarity: "uncommon", chance: 15 },
+      { name: "Air Elemental", img: "https://blacket.org/content/blooks/Air%20Elemental1.webp", rarity: "uncommon", chance: 15 },
+      { name: "Frost Elemental", img: "https://blacket.org/content/blooks/Frost%20Elemental1.webp", rarity: "rare", chance: 10 },
+      { name: "Lava Elemental", img: "https://blacket.org/content/blooks/Lava%20Elemental1.webp", rarity: "rare", chance: 10 },
+      { name: "Space Elemental", img: "https://blacket.org/content/blooks/Space%20Elemental1.webp", rarity: "epic", chance: 5 },
+      { name: "Electric Elemental", img: "https://blacket.org/content/blooks/Electric%20Elemental1.webp", rarity: "legendary", chance: 1 },
+      { name: "Plasma Elemental", img: "https://blacket.org/content/blooks/Plasma%20Elemental1.webp", rarity: "supreme", chance: 0.05 },
+      ];
+      
+    const autumnPack = [
+      { name: "Black Bear", img: "https://blacket.org/content/blooks/Black%20Bear.webp", rarity: "uncommon", chance: 15 },
+      { name: "Pumpkin Pie", img: "https://blacket.org/content/blooks/Pumpkin%20Pie.webp", rarity: "uncommon", chance: 15 },
+      { name: "Chipmunk", img: "https://blacket.org/content/blooks/Chipmunk.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cornucopia", img: "https://blacket.org/content/blooks/Cornucopia.webp", rarity: "uncommon", chance: 15 },
+      { name: "Autumn Cat", img: "https://blacket.org/content/blooks/Autumn%20Cat.webp", rarity: "rare", chance: 10 },
+      { name: "Pumpkin Puppy", img: "https://blacket.org/content/blooks/Pumpkin%20Puppy.webp", rarity: "rare", chance: 10 },
+      { name: "Autumn Crow", img: "https://blacket.org/content/blooks/Autumn%20Crow.webp", rarity: "epic", chance: 5 },
+      { name: "Turkey", img: "https://blacket.org/content/blooks/Turkey.webp", rarity: "legendary", chance: 1 },
+      { name: "Autumn Wreath", img: "https://blacket.org/content/blooks/Autumn%20Wreath.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Golden Pumpkin Pie", img: "https://blacket.org/content/blooks/Golden%20Pumpkin%20Pie.webp", rarity: "chroma", chance: 0.05 },
+      ];
+    
+    const spacePack = [
+      { name: "Earth", img: "https://blacket.org/content/blooks/Earth.webp", rarity: "uncommon", chance: 15 },
+      { name: "Meteor Blook", img: "https://blacket.org/content/blooks/Meteor.webp", rarity: "uncommon", chance: 15 },
+      { name: "Stars", img: "https://blacket.org/content/blooks/Stars.webp", rarity: "uncommon", chance: 15 },
+      { name: "Alien", img: "https://blacket.org/content/blooks/Alien.webp", rarity: "uncommon", chance: 15 },
+      { name: "Planet", img: "https://blacket.org/content/blooks/Planet.webp", rarity: "rare", chance: 10 },
+      { name: "UFO", img: "https://blacket.org/content/blooks/UFO.webp", rarity: "rare", chance: 10 },
+      { name: "Spaceship", img: "https://blacket.org/content/blooks/Spaceship.webp", rarity: "epic", chance: 5 },
+      { name: "Astronaut", img: "https://blacket.org/content/blooks/Astronaut.webp", rarity: "legendary", chance: 1 },
+      { name: "Pink Astronaut", img: "https://blacket.org/content/blooks/Pink%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Red Astronaut", img: "https://blacket.org/content/blooks/Red%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Orange Astronaut", img: "https://blacket.org/content/blooks/Orange%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Yellow Astronaut", img: "https://blacket.org/content/blooks/Yellow%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Lime Astronaut", img: "https://blacket.org/content/blooks/Lime%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Green Astronaut", img: "https://blacket.org/content/blooks/Green%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Cyan Astronaut", img: "https://blacket.org/content/blooks/Cyan%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Blue Astronaut", img: "https://blacket.org/content/blooks/Blue%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Purple Astronaut", img: "https://blacket.org/content/blooks/Purple%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Brown Astronaut", img: "https://blacket.org/content/blooks/Brown%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Black Astronaut", img: "https://blacket.org/content/blooks/Black%20Astronaut.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Space Terminal", img: "https://blacket.org/content/blooks/Space%20Terminal.webp", rarity: "supreme", chance: 0.05 },
+      { name: "Space Debugger", img: "https://blacket.org/content/blooks/Space%20Debugger.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Tim the Alien", img: "https://blacket.org/content/blooks/Tim%20the%20Alien.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Rainbow Astronaut", img: "https://blacket.org/content/blooks/Rainbow%20Astronaut.webp", rarity: "mythical", chance: 0.005 },
+      ];
+    
+    const ogPack = [
+      { name: "yesbutterjeff", img: "https://blacket.org/content/blooks/yesbutterjeff.webp", rarity: "uncommon", chance: 15 },
+      { name: "Pablo", img: "https://blacket.org/content/blooks/Pablo.webp?1", rarity: "uncommon", chance: 15 },
+      { name: "fristic", img: "https://blacket.org/content/blooks/fristic.webp", rarity: "uncommon", chance: 15 },
+      { name: "minesraft2", img: "https://blacket.org/content/blooks/Minesraft2.webp", rarity: "uncommon", chance: 15 },
+      { name: "Cerulean", img: "https://blacket.org/content/blooks/Cerulean.webp", rarity: "epic", chance: 5 },
+      { name: "iBlooket", img: "https://blacket.org/content/blooks/iBlooket.webp", rarity: "epic", chance: 5 },
+      { name: "root", img: "https://blacket.org/content/blooks/root.webp", rarity: "legendary", chance: 1 },
+      { name: "envi", img: "https://www.blacketvalues.com/static/images/envi2.png", rarity: "legendary", chance: 1 },
+      { name: "GAMERYT", img: "https://blacket.org/content/blooks/GAMERYT.webp", rarity: "supreme", chance: 0.05 },
+      { name: "zastix", img: "https://blacket.org/content/blooks/zastix.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Xotic", img: "https://blacket.org/content/blooks/Xotic.webp", rarity: "mythical", chance: 0.005 },
+      { name: "New Xotic", img: "https://blacket.org/content/blooks/newer%20xotic.png", rarity: "mythical", chance: 0.005 },
+      { name: "Festive Xotic", img: "https://blacket.org/content/blooks/Festive%20Xotic.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Lovely zastix", img: "https://blacket.org/content/blooks/Lovely%20zastix.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Lucky Pablo", img: "https://blacket.org/content/blooks/Lucky%20Pablo.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Patriotic Piotr", img: "https://blacket.org/content/blooks/Patriotic%20Piotr.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Ankha Cerulean", img: "https://blacket.org/content/blooks/Cerulean%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "iPilgrim", img: "https://blacket.org/content/blooks/iPilgrim.webp", rarity: "chroma", chance: 0.05 },
+      { name: "OneDumbElf", img: "https://blacket.org/content/blooks/OneDumbElf.Webp", rarity: "chroma", chance: 0.05 },
+      { name: "Unwrapped", img: "https://blacket.org/content/blooks/SantaUnblooked.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Piotr Riding A Patriotic Turkey", img: "https://www.blacketvalues.com/static/images/Piotr%20Riding%20A%20Patriotic%20Turkey.png", rarity: "supreme", chance: 0.05 },
+      ];
+      
+      const ankhaPack = [
+      { name: "Ankha", img: "https://blacket.org/content/blooks/Ankha.webp", rarity: "uncommon", chance: 15 },
+      { name: "Mummy Ankha", img: "https://blacket.org/content/blooks/Mummy%20Ankha.webp", rarity: "uncommon", chance: 15 },
+      { name: "Realistic Ankha", img: "https://blacket.org/content/blooks/Realistic%20Ankha.webp", rarity: "uncommon", chance: 15 },
+      { name: "Glowing Ankha", img: "https://blacket.org/content/blooks/Glowing%20Ankha.webp", rarity: "uncommon", chance: 15 },
+      { name: "Mark Ankha", img: "https://blacket.org/content/blooks/Mark%20Ankha.webp", rarity: "rare", chance: 10 },
+      { name: "Ankha's House", img: "https://blacket.org/content/blooks/Ankha's%20House.webp", rarity: "rare", chance: 10 },
+      { name: "High Ankha", img: "https://blacket.org/content/blooks/High%20Ankha.webp", rarity: "epic", chance: 5 },
+      { name: "Black Ankha", img: "https://blacket.org/content/blooks/Black%20Ankha.webp", rarity: "epic", chance: 5 },
+      { name: "Golden Ankha", img: "https://blacket.org/content/blooks/Golden%20Ankha.webp", rarity: "legendary", chance: 1 },
+      { name: "Zone Ankha", img: "https://blacket.org/content/blooks/Zone%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Rainbow Ankha", img: "https://blacket.org/content/blooks/Rainbow%20Ankha.webp", rarity: "mythical", chance: 0.005 },
+      { name: "Festive Ankha", img: "https://blacket.org/content/blooks/Festive%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Naughty Ankha", img: "https://blacket.org/content/blooks/Naughty%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Lovely Ankha", img: "https://blacket.org/content/blooks/Lovely%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Ukraine Ankha", img: "https://blacket.org/content/blooks/Ukraine%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Lucky Ankha", img: "https://blacket.org/content/blooks/Lucky%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Spring Ankha", img: "https://blacket.org/content/blooks/Spring%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "American Ankha", img: "https://blacket.org/content/blooks/American%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Vampire Ankha", img: "https://blacket.org/content/blooks/Vampire%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Turkey Ankha", img: "https://blacket.org/content/blooks/Turkey%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Lunar Ankha", img: "https://blacket.org/content/blooks/Lunar%20Ankha.webp", rarity: "chroma", chance: 0.05 },
+      ];
+      
+      const peepsPack = [
+      { name: "Yellow Bunny Peep", img: "https://blacket.org/content/blooks/Yellow%20Bunny%20Peep.webp", rarity: "epic", chance: 70 },
+      { name: "White Bunny Peep", img: "https://blacket.org/content/blooks/White%20Bunny%20Peep.webp", rarity: "epic", chance: 70 },
+      { name: "Pink Bunny Peep", img: "https://blacket.org/content/blooks/Pink%20Bunny%20Peep.webp", rarity: "epic", chance: 70 },
+      { name: "Green Chick Peep", img: "https://blacket.org/content/blooks/Green%20Chick%20Peep.webp", rarity: "legendary", chance: 20 },
+      { name: "Yellow Chick Peep", img: "https://blacket.org/content/blooks/Yellow%20Chick%20Peep.webp", rarity: "legendary", chance: 20 },
+      { name: "Pink Chick Peep", img: "https://blacket.org/content/blooks/Pink%20Chick%20Peep.webp", rarity: "legendary", chance: 20 },
+      { name: "Melted Pink Peep", img: "https://blacket.org/content/blooks/Melted%20Pink%20Peep.webp", rarity: "chroma", chance: 5 },
+      { name: "Melted Blue Peep", img: "https://blacket.org/content/blooks/Melted%20Blue%20Peep.webp", rarity: "chroma", chance: 5 },
+      { name: "Pack of Peeps", img: "https://blacket.org/content/blooks/Pack%20of%20Peeps.webp", rarity: "mythical", chance: 1 },
+    ];
+    
+    const luckyPack = [
+      { name: "Pot o' Gold", img: "https://www.blacketvalues.com/static/images/Pot%20O%20Gold.png", rarity: "uncommon", chance: 15 },
+      { name: "Gold Gremlin", img: "https://www.blacketvalues.com/static/images/Gremlin.png", rarity: "uncommon", chance: 15 },
+      { name: "Clover Knight", img: "https://www.blacketvalues.com/static/images/Clover%20Knight.png", rarity: "uncommon", chance: 15 },
+      { name: "Emerald", img: "https://www.blacketvalues.com/static/images/Emerald.png", rarity: "rare", chance: 10 },
+      { name: "St. Patrick's Hat", img: "https://www.blacketvalues.com/static/images/St%20Patricks%20Hat.png", rarity: "rare", chance: 10 },
+      { name: "Harp o' Clovers", img: "https://www.blacketvalues.com/static/images/Harp%20O%20Clovers.png", rarity: "epic", chance: 5 },
+      { name: "Shamrock", img: "https://www.blacketvalues.com/static/images/Shamrock.png", rarity: "legendary", chance: 1 },
+      { name: "Golden Griffin", img: "https://www.blacketvalues.com/static/images/Golden%20Griffin.png", rarity: "supreme", chance: 0.05 },
+      { name: "Mug of Beer", img: "https://www.blacketvalues.com/static/images/Mug%20of%20Beer.png", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const cloverPack = [
+      { name: "Lucky Boot", img: "https://www.blacketvalues.com/static/images/Lucky%20Boot.png", rarity: "uncommon", chance: 15 },
+      { name: "Lucky Socks", img: "https://www.blacketvalues.com/static/images/Lucky%20Socks.png", rarity: "uncommon", chance: 15 },
+      { name: "Horseshoe", img: "https://www.blacketvalues.com/static/images/Horseshoe.png", rarity: "rare", chance: 10 },
+      { name: "Rabbit's Foot", img: "https://www.blacketvalues.com/static/images/Rabbit's%20Foot.png", rarity: "rare", chance: 10 },
+      { name: "Shamrock Shake", img: "https://www.blacketvalues.com/static/images/Shamrock%20Shake.png", rarity: "epic", chance: 5 },
+      { name: "Four Leaf Clover", img: "https://www.blacketvalues.com/static/images/Four%20Leaf%20Clover.png", rarity: "legendary", chance: 1 },
+      { name: "Lucky Zoey", img: "https://www.blacketvalues.com/static/images/Lucky%20Zoey%202.png", rarity: "uique", chance: 0.05 },
+      { name: "Chest Mimic", img: "https://www.blacketvalues.com/static/images/Chest%20Mimic%202.png", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const horrorPack = [
+      { name: "Jeff the Killer", img: "https://www.blacketvalues.com/static/images/Jeff%20the%20Killer.png", rarity: "uncommon", chance: 15 },
+      { name: "Slenderman", img: "https://www.blacketvalues.com/static/images/Slenderman.png", rarity: "uncommon", chance: 15 },
+      { name: "Siren Head", img: "https://www.blacketvalues.com/static/images/Siren%20Head.png", rarity: "rare", chance: 10 },
+      { name: "Plague Doctor", img: "https://www.blacketvalues.com/static/images/Plague%20Doctor.png", rarity: "epic", chance: 5 },
+      { name: "Micheal Meyers", img: "https://www.blacketvalues.com/static/images/Michael%20Meyers.png", rarity: "legendary", chance: 1 },
+      { name: "Jason Voorhees", img: "https://www.blacketvalues.com/static/images/Jason%20Voorhees.png", rarity: "supreme", chance: 0.05 },
+      { name: "Ghostface", img: "https://www.blacketvalues.com/static/images/Ghostface.png", rarity: "mythical", chance: 0.005 },
+      ];
+      
+      const springPack = [
+      { name: "Unpainted Egg", img: "https://www.blacketvalues.com/static/images/Unpainted%20Egg.png", rarity: "uncommon", chance: 15 },
+      { name: "Spotted Egg", img: "https://www.blacketvalues.com/static/images/Spotted%20Egg.png", rarity: "uncommon", chance: 15 },
+      { name: "ZigZag Egg", img: "https://www.blacketvalues.com/static/images/Zigzag%20Egg.png", rarity: "uncommon", chance: 15 },
+      { name: "Checker Egg", img: "https://www.blacketvalues.com/static/images/Checker%20Egg.png", rarity: "uncommon", chance: 15 },
+      { name: "Fred the Egg", img: "https://www.blacketvalues.com/static/images/Fred%20the%20Egg.png", rarity: "rare", chance: 10 },
+      { name: "Chocolate Egg", img: "https://www.blacketvalues.com/static/images/Chocolate%20Egg.png", rarity: "rare", chance: 10 },
+      { name: "Easter Basket", img: "https://www.blacketvalues.com/static/images/Easter%20Basket.png", rarity: "epic", chance: 5 },
+      { name: "Spring Rabbit", img: "https://blacket.org/content/blooks/Spring%20Rabbit.webp", rarity: "legendary", chance: 1 },
+      { name: "Mama Chick Egg", img: "https://i.ibb.co/XZDmfd8h/Untitled2772-20250420154205.png", rarity: "supreme", chance: 0.05 },
+      { name: "Evil Fred the Egg", img: "https://www.blacketvalues.com/static/images/Evil%20Fred%20the%20Egg.png", rarity: "chroma", chance: 0.05 },
+      { name: "Chip the Egg", img: "https://www.blacketvalues.com/static/images/Chip%20the%20Egg.png", rarity: "supreme", chance: 0.05 },
+      { name: "Dead the Egg", img: "https://www.blacketvalues.com/static/images/Dead%20the%20Egg.png", rarity: "supreme", chance: 0.05 },
+      { name: "Scuba the Egg", img: "https://www.blacketvalues.com/static/images/Scuba%20the%20Egg.png", rarity: "supreme", chance: 0.05 },
+      { name: "Eugene the Egg", img: "https://www.blacketvalues.com/static/images/Eugene%20the%20Egg.png", rarity: "supreme", chance: 0.05 },
+      { name: "Tim the Aliegg", img: "https://www.blacketvalues.com/static/images/Tim%20the%20Aliegg.png", rarity: "supreme", chance: 0.05 },
+      { name: "Shannon the Egg", img: "https://www.blacketvalues.com/static/images/Shannon%20the%20Egg.png", rarity: "supreme", chance: 0.05 },
+      ];
+      
+      const ttePack = [
+      { name: "Golden Shovel", img: "https://blacket.org/content/blooks/Golden%20Shovel.webp", rarity: "unique", chance: 1 },
+      { name: "Treasure Chest", img: "https://blacket.org/content/blooks/Treasure%20Chest.webp", rarity: "mythical", chance: 1 },
+      { name: "Golden Crab", img: "https://blacket.org/content/blooks/Golden%20Crab.webp", rarity: "unique", chance: 1 },
+      { name: "Golden Seashell", img: "https://blacket.org/content/blooks/Golden%20Seashell.webp", rarity: "unique", chance: 1 },
+      { name: "Gold Doubloon", img: "https://blacket.org/content/blooks/Gold%20Doubloon.webp", rarity: "mythical", chance: 1 },
+      { name: "Tropical Island", img: "https://www.blacketvalues.com/static/images/Harp%20O%20Clovers.png", rarity: "iridescent", chance: 1 },
+      { name: "Bia", img: "https://blacket.org/content/blooks/Bia.webp", rarity: "iridescent", chance: 1 },
+      ];
+      
+      const miscellanousPack = [
+      { name: "10k", img: "https://blacket.org/content/blooks/10k.webp", rarity: "unique", chance: 1 },
+      { name: "20k", img: "https://blacket.org/content/blooks/20k.webp", rarity: "unique", chance: 1 },
+      { name: "50k", img: "https://www.blacketvalues.com/static/images/50k.png", rarity: "unique", chance: 1 },
+      { name: "Lunar Frog", img: "https://blacket.org/content/blooks/Lunar%20Frog.webp", rarity: "chroma", chance: 1 },
+      { name: "Lovely Planet", img: "https://blacket.org/content/blooks/Lovely%20Planet.webp", rarity: "chroma", chance: 1 },
+      { name: "Lucky Hamster", img: "https://blacket.org/content/blooks/Lucky%20Hamster.webp", rarity: "supreme", chance: 1 },
+      { name: "Champagne Zoey", img: "https://www.blacketvalues.com/static/images/Champagne%20Zoey%20resized.png", rarity: "unique", chance: 1 },
+      { name: "Chocolate Rabbit", img: "https://blacket.org/content/blooks/Chocolate%20Rabbit.webp", rarity: "chroma", chance: 1 },
+      { name: "Cooked Turkey", img: "https://files.catbox.moe/ninu9n.png", rarity: "supreme", chance: 1 },
+      { name: "Demogorgon", img: "https://www.blacketvalues.com/static/images/Demogorgon.png", rarity: "mythical", chance: 1 },
+      { name: "Eclipse", img: "https://blacket.org/content/blooks/Eclipse.webp", rarity: "unique", chance: 1 },
+      { name: "Party Pig", img: "https://blacket.org/content/blooks/Party%20Pig.webp", rarity: "unique", chance: 1 },
+      { name: "Leprechaun", img: "https://blacket.org/content/blooks/Leprechaun.webp", rarity: "supreme", chance: 1 },
+      { name: "Zoey Plush", img: "https://www.blacketvalues.com/static/images/Zoey%20Plush.png", rarity: "iridescent", chance: 1 },
+      { name: "Spring Globe", img: "https://blacket.org/content/blooks/Spring%20Globe.webp", rarity: "unique", chance: 1 },
+      { name: "Fireworks 2025", img: "https://blacket.org/content/blooks/Fireworks.webp", rarity: "unique", chance: 1 },
+      { name: "Lovely Peacock", img: "https://blacket.org/content/blooks/Lovely%20Peacock.webp", rarity: "chroma", chance: 1 },
+      { name: "Lovely Zoey", img: "https://www.blacketvalues.com/static/images/Lovely%20Zoey.png", rarity: "unique", chance: 1 },
+      { name: "Vase of Flowers", img: "https://www.blacketvalues.com/static/images/Vase%20of%20Flowers.png", rarity: "unique", chance: 1 },
+      { name: "Best Blook Trophy", img: "https://blacket.org/content/blooks/Blook_Award.webp", rarity: "unique", chance: 1 },
+      { name: "Best Event Trophy", img: "https://blacket.org/content/blooks/EventAward.webp", rarity: "unique", chance: 1 },
+      { name: "Best Artist Trophy", img: "https://blacket.org/content/blooks/Artist_Award.webp", rarity: "unique", chance: 1 },
+      { name: "Best Blacktuber Trophy", img: "https://blacket.org/content/blooks/Blacktuber_Award.webp", rarity: "unique", chance: 1 },
+      { name: "Best Known Player Trophy", img: "https://blacket.org/content/blooks/Known_Award.webp", rarity: "unique", chance: 1 },
+      ];
+
+  const packs = { bot: botPack, bug: bugPack, dino: dinoPack, candy: candyPack, fruit: fruitPack, magic: magicPack, music: musicPack, retro: retroPack, space: spacePack, autumn: autumnPack, combat: combatPack, pirate: piratePack, safari: safariPack, scifi: scifiPack, spooky: spookyPack, sports: sportsPack, summer: summerPack, aquatic: aquaticPack, outback: outbackPack, science: sciencePack, blizzard: blizzardPack, gemstone: gemstonePack, medieval: medievalPack, breakfast: breakfastPack, elemental: elementalPack, videogame: videogamePack, wonderland: wonderlandPack, icemonster: icemonsterPack, og: ogPack, time: timePack, color: colorPack, peeps: peepsPack, clover: cloverPack, lucky: luckyPack, horror: horrorPack, lovely: lovelyPack, spring: springPack, tte: ttePack, miscellanous: miscellanousPack, };
+
+  // UI setup
+  const ui = document.createElement('div');
+  ui.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    color: black;
+    font-family: Arial;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 0 15px gray;
+    border: 2px solid white;
+    max-width: 320px;
+  `;
+  ui.innerHTML = `
+    <strong style="font-size: 16px;">Pack Opener</strong><br><br>
+    <label>Pack:
+      <select id="cheat-pack" style="width: 100%; padding: 6px;">
+        <option value="bot">Bot</option>
+        <option value="bug">Bug</option>
+        <option value="dino">Dino</option>
+        <option value="candy">Candy</option>
+        <option value="fruit">Fruit</option>
+        <option value="magic">Magic</option>
+        <option value="music">Music</option>
+        <option value="retro">Retro</option>
+        <option value="space">Space</option>
+        <option value="autumn">Autumn</option>
+        <option value="combat">Combat</option>
+        <option value="pirate">Pirate</option>
+        <option value="safari">Safari</option>
+        <option value="scifi">Sci-Fi</option>
+        <option value="spooky">Spooky</option>
+        <option value="sports">Sports</option>
+        <option value="summer">Summer</option>
+        <option value="aquatic">Aquatic</option>
+        <option value="dessert">Dessert</option>
+        <option value="outback">Outback</option>
+        <option value="science">Science</option>
+        <option value="blizzard">Blizzard</option>
+        <option value="gemstone">Gemstone</option>
+        <option value="medieval">Medieval</option>
+        <option value="breakfast">Breakfast</option>
+        <option value="elemental">Elemental</option>
+        <option value="videogame">Video Game</option>
+        <option value="wonderland">Wonderland</option>
+        <option value="icemonster">Ice Monster</option>
+        <option value="og">OG</option>
+        <option value="time">Time</option>
+        <option value="color">Color</option>
+        <option value="peeps">Peeps</option>
+        <option value="lucky">Lucky</option>
+        <option value="clover">Clover</option>
+        <option value="horror">Horror</option>
+        <option value="lovely">Lovely</option>
+        <option value="spring">Spring</option>
+        <option value="tte">TTE</option>
+        <option value="miscellanous">Miscellanous</option>
+      </select>
+    </label><br><br>
+    <label>Amount:
+      <input id="cheat-amount" type="number" value="1" min="1" style="width: 100%; padding: 6px;">
+    </label><br><br>
+    <button id="cheat-open" style="width: 100%; background: black; color: white; padding: 10px; font-weight: bold; border-radius: 6px; border: none;">Open Pack(s)</button>
+    <div id="cheat-result" style="margin-top: 10px;"></div>
+  `;
+  document.body.appendChild(ui);
+
+  // Logic for opening packs
+  document.getElementById('cheat-open').onclick = () => {
+    const pack = document.getElementById('cheat-pack').value;
+    const amount = parseInt(document.getElementById('cheat-amount').value);
+    const cost = PACK_COST[pack] * amount;
+
+    if (user.tokens < cost) {
+      alert(`You need ${cost} tokens, but only have ${user.tokens}`);
+      return;
+    }
+
+    const results = [];
+
+    for (let i = 0; i < amount; i++) {
+      // Calculate total chance for the pack
+      const totalChance = packs[pack].reduce((acc, blook) => acc + blook.chance, 0);
+      const rand = Math.random() * totalChance;
+      let sum = 0;
+      let reward = packs[pack][packs[pack].length - 1]; // fallback default
+
+      for (const blook of packs[pack]) {
+        sum += blook.chance;
+        if (rand <= sum) {
+          reward = blook;
+          break;
+        }
+      }
+
+      user.blooks = user.blooks || [];
+      user.blooks.push(reward);
+      results.push(reward.name);
+    }
+
+    user.tokens -= cost;
+    user.packsOpened = (user.packsOpened || 0) + amount;
+    users[currentUser] = user;
+    localStorage.setItem('fooditNewStorage', JSON.stringify(users));
+
+    // Update UI
+    const display = document.getElementById('token-count');
+    if (display) display.textContent = user.tokens.toLocaleString('en-US');
+
+    document.getElementById('cheat-result').textContent = ` You got: ${results.join(', ')}`;
+  };
+
+  console.log('%c Cheat code enabled: Open packs manually in bottom-right box.', 'color: black; font-weight: bold;');
+})();
