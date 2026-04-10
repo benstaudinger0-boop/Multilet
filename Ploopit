@@ -1,0 +1,278 @@
+(function () {
+  const currentUser = localStorage.getItem('fooditCurrentUser');
+  if (!currentUser) {
+    alert('No user is currently logged in.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('fooditNewStorage') || '{}');
+  const user = users[currentUser];
+  if (!user) {
+    alert('User data not found.');
+    return;
+  }
+
+  const PACK_COST = {
+    cat: 40,
+    emoji: 40,
+    food: 25,
+    frog: 20,
+    hidden: 5000,
+    og: 25,
+    powerup: 55,
+    shadow: 35,
+    space: 35,
+    spooky: 40,
+    western: 25,
+    winter: 40
+  };
+
+   const catPack = [ 
+      { name: "Cosmic Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/cosmic.png", rarity: "uncommon", chance: 15 },
+      { name: "Dream Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/dream.png", rarity: "uncommon", chance: 15 },
+      { name: "Ink Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/ink.png", rarity: "uncommon", chance: 15 },
+      { name: "Earth Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/earth.png", rarity: "uncommon", chance: 15 },
+      { name: "Corrupt Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/corrupt.png", rarity: "rare", chance: 10 },
+      { name: "Crystal Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/crystal.png", rarity: "rare", chance: 10 },
+      { name: "Paradox Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/paradox.png", rarity: "epic", chance: 5 },
+      { name: "Mittens", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/mittens.png", rarity: "legendary", chance: 1 },
+      { name: "Withered Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/withered.png", rarity: "chroma", chance: 0.05 },
+      { name: "Glitchy Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/glitchy.png", rarity: "chroma", chance: 0.05 },
+      { name: "Shadow Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/shadow.png", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const emojiPack = [ 
+      { name: "Cool", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/cool.svg", rarity: "uncommon", chance: 15 },
+      { name: "Love", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/love.svg", rarity: "uncommon", chance: 15 },
+      { name: "Smile", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/smile.svg", rarity: "uncommon", chance: 15 },
+      { name: "Surprised", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/surprised.svg", rarity: "uncommon", chance: 15 },
+      { name: "Rich", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/rich.svg", rarity: "rare", chance: 10 },
+      { name: "Sob", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/sob.svg", rarity: "rare", chance: 10 },
+      { name: "Nerd", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/nerd.svg", rarity: "epic", chance: 5 },
+      { name: "Angry", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/angry.svg", rarity: "legendary", chance: 1 },
+      { name: "Ice", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/ice.svg", rarity: "chroma", chance: 0.05 },
+      { name: "Party", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/emoji/party.gif", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const foodPack = [ 
+      { name: "Egg", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/egg.png", rarity: "uncommon", chance: 15 },
+      { name: "Cheese", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/cheeze.png", rarity: "uncommon", chance: 15 },
+      { name: "Tomato", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/tomato.png", rarity: "uncommon", chance: 15 },
+      { name: "Burger", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/burger.png", rarity: "rare", chance: 10 },
+      { name: "Pie", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/pie.png", rarity: "rare", chance: 10 },
+      { name: "Coffee", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/coffee.png", rarity: "epic", chance: 5 },
+      { name: "Bisuit", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/bisket.png", rarity: "legendary", chance: 1 },
+      { name: "Chocolate Bar", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/food/chocobar.png", rarity: "chroma", chance: 0.05 },
+    ];
+    
+    const frogPack = [ 
+      { name: "Mark Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/markfrog.png", rarity: "uncommon", chance: 15 },
+      { name: "Shy Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/yellow.png", rarity: "uncommon", chance: 15 },
+      { name: "Red Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/redfrog.png", rarity: "uncommon", chance: 15 },
+      { name: "Frog Cookie", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/frogcookie.png", rarity: "rare", chance: 10 },
+      { name: "Frozen Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/froznkrabb.png", rarity: "rare", chance: 10 },
+      { name: "Money Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/moneyfrog.png", rarity: "epic", chance: 5 },
+      { name: "Galaxy Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/galaxy_frog.png", rarity: "legendary", chance: 1 },
+      { name: "Party Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/party_frog.png", rarity: "chroma", chance: 0.05 },
+      { name: "Rainbow Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/frog/rainbow_3.gif", rarity: "mystical", chance: 0.005 },
+      ];
+      
+      const hiddenPack = [ 
+      { name: "Turkey", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/giving/turkey.png", rarity: "mystical", chance: 10 },
+      { name: "New Year", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/year.png", rarity: "mystical", chance: 10 },
+      { name: "Logo", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/debug/logo.png", rarity: "mystical", chance: 10 },
+      { name: "Party SOUNDGOD", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/birthday/party-sound.png", rarity: "mystical", chance: 10 },
+      { name: "Military Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/cat/military.png", rarity: "mystical", chance: 10 },
+      { name: "Old Man Lolz", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/facerev.jpg", rarity: "mystical", chance: 10 },
+      { name: "Christmas Vegito", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/christmasV.png", rarity: "mystical", chance: 10 },
+    ];
+    
+    const ogPack = [ 
+      { name: "GAMERYT", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/gamer.png", rarity: "uncommon", chance: 15 },
+      { name: "Hawkmrg", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/hawkmrg.png", rarity: "uncommon", chance: 15 },
+      { name: "Xotic", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/xotic.webp", rarity: "uncommon", chance: 15 },
+      { name: "Trixter", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/trixter.png", rarity: "uncommon", chance: 15 },
+      { name: "Pig55", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/pig55.webp", rarity: "rare", chance: 10 },
+      { name: "OzzyVR", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/ozzy.png", rarity: "rare", chance: 10 },
+      { name: "Vegito", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/vegito.png", rarity: "rare", chance: 10 },
+      { name: "BRP", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/BRP.gif", rarity: "epic", chance: 5 },
+      { name: "Kaelyn", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/kaelyn.png", rarity: "epic", chance: 5 },
+      { name: "RIC", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/ric.png", rarity: "legendary", chance: 1 },
+      { name: "Cactus", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/cactus.png", rarity: "legendary", chance: 1 },
+      { name: "Mystical", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/mystical.svg", rarity: "chroma", chance: 0.05 },
+      { name: "SOUNDGOD", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/SOUNDGOD.gif", rarity: "mystical", chance: 0.005 },
+      { name: "Conspirator", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/og/conspirator.gif", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const powerupPack = [ 
+      { name: "Fire Flower", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/fireflower.webp", rarity: "uncommon", chance: 15 },
+      { name: "Mushroom", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/mushroom.webp", rarity: "uncommon", chance: 15 },
+      { name: "Power Moon", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/PowerMoon.webp", rarity: "uncommon", chance: 15 },
+      { name: "Super Star", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/SuperStar.webp", rarity: "rare", chance: 10 },
+      { name: "Banana Peel", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/BananaPeel.webp", rarity: "rare", chance: 10 },
+      { name: "Bell", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/bell.webp", rarity: "rare", chance: 10 },
+      { name: "Tanooki Leaf", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/TanookiLeaf.webp", rarity: "epic", chance: 5 },
+      { name: "Mega Mushroom", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/MegaMushroom.webp", rarity: "legendary", chance: 1 },
+      { name: "Heli Mushroom", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/Heli-Mushroom.webp", rarity: "chroma", chance: 0.05 },
+      { name: "Rainbow Star", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/mario/RainbowStar.webp", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const shadowPack = [ 
+      { name: "Shadow Owl", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowOwl.png", rarity: "uncommon", chance: 15 },
+      { name: "Shadow Fairy", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowfairy.png", rarity: "uncommon", chance: 15 },
+      { name: "Shadow Mummy", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowmummy.png", rarity: "uncommon", chance: 15 },
+      { name: "Shadow Meg", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowmeg.png", rarity: "rare", chance: 10 },
+      { name: "Shadow Globe", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowglobe.png", rarity: "rare", chance: 10 },
+      { name: "Shadow King", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowking.png", rarity: "epic", chance: 5 },
+      { name: "Shadow Panda", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowpanda.png", rarity: "legendary", chance: 1 },
+      { name: "Shadow Astronaut", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowastro.png", rarity: "legendary", chance: 1 },
+      { name: "Shadow Dog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/shadowdog.png", rarity: "chroma", chance: 0.05 },
+      { name: "Shadow Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/shadow/nightmarecat.gif", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const spacePack = [ 
+      { name: "Mars", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/mars.svg", rarity: "uncommon", chance: 15 },
+      { name: "Moon", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/moon.svg", rarity: "uncommon", chance: 15 },
+      { name: "Saturn", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/saturn.svg", rarity: "uncommon", chance: 15 },
+      { name: "Galaxy", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/galaxy.svg", rarity: "rare", chance: 10 },
+      { name: "Spaceship", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/spaceship.svg", rarity: "rare", chance: 10 },
+      { name: "Sun", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/sun.svg", rarity: "epic", chance: 5 },
+      { name: "Satellite", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/satellite.svg", rarity: "legendary", chance: 1 },
+      { name: "Astronaut", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/astro.png", rarity: "legendary", chance: 1 },
+      { name: "Astroids", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/asteroid.svg", rarity: "chroma", chance: 0.05 },
+      { name: "Constellation", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/space/constellation.gif", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const spookyPack = [ 
+      { name: "Mummy Monster", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/Mummy_Monster.png", rarity: "uncommon", chance: 15 },
+      { name: "Gummy Ghost", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/Ghost_Gummy.png", rarity: "uncommon", chance: 15 },
+      { name: "Pumpkin Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/Pumpkin_Cat.png", rarity: "uncommon", chance: 15 },
+      { name: "Grim Reaper", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/grim_reaper.png", rarity: "uncommon", chance: 15 },
+      { name: "Mumkin", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/mummkin.png", rarity: "rare", chance: 10 },
+      { name: "Cookie Astro", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/cookieastro.png", rarity: "rare", chance: 10 },
+      { name: "Devil Narwhal", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/devilnarwal.png", rarity: "epic", chance: 5 },
+      { name: "Bot Ghost", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/Bot_Ghost.png", rarity: "legendary", chance: 1 },
+      { name: "Gold Caramel Apple", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/goldcaramelapple.png", rarity: "chroma", chance: 0.05 },
+      { name: "Haunted Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/hauntedcat.gif", rarity: "mystical", chance: 0.005 },
+      { name: "Zombie Child", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/spooky/zombiechild.svg", rarity: "mystical", chance: 0.005 },
+    ];
+    
+    const westernPack = [ 
+      { name: "Sheriff Badge", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/badge.png", rarity: "uncommon", chance: 15 },
+      { name: "Horseshoe", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/shoe.png", rarity: "uncommon", chance: 15 },
+      { name: "Desert Cactus", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/cactus.png", rarity: "uncommon", chance: 15 },
+      { name: "Wanted Poster", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/poster.png", rarity: "rare", chance: 10 },
+      { name: "Lasso", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/lasso.png", rarity: "rare", chance: 10 },
+      { name: "Wheel", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/wheel.png", rarity: "epic", chance: 5 },
+      { name: "Boot", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/boot.png", rarity: "legendary", chance: 1 },
+      { name: "Golden Horseshoe", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/shoeG.png", rarity: "chroma", chance: 0.05 },
+      { name: "Silver Horseshoe", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/western/shoeS.png", rarity: "chroma", chance: 0.05 },
+    ];
+    
+    const winterPack = [ 
+      { name: "Ornament", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/Ornament.png", rarity: "uncommon", chance: 15 },
+      { name: "Gift", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/Gift.png", rarity: "uncommon", chance: 15 },
+      { name: "Tree", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/tree.png", rarity: "uncommon", chance: 15 },
+      { name: "Toy Train", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/toy-train.png", rarity: "rare", chance: 10 },
+      { name: "Desert Globe", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/desert.png", rarity: "rare", chance: 10 },
+      { name: "Santa Elf", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/santa_elf.png", rarity: "epic", chance: 5 },
+      { name: "Holiday Cat", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/Holiday_Cat.png", rarity: "legendary", chance: 1 },
+      { name: "North Pole", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/north_pole.png", rarity: "chroma", chance: 0.05 },
+      { name: "Santa", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/santa.png", rarity: "chroma", chance: 0.05 },
+      { name: "Gingerbread Frog", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/frog_g.png", rarity: "chroma", chance: 0.05 },
+      { name: "Wreath", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/wreath.png", rarity: "chroma", chance: 0.05 },
+      { name: "Lights", img: "https://cbys10.github.io/ploopcdn/assets/images/ploops/chistmas/light.gif", rarity: "mystical", chance: 0.005 },
+      ];
+
+  const packs = { cat: catPack, emoji: emojiPack, food: foodPack, frog: frogPack, hidden: hiddenPack, og: ogPack, powerup: powerupPack, shadow: shadowPack, space: spacePack, spooky: spookyPack, western: westernPack, winter: winterPack };
+
+  // UI setup
+  const ui = document.createElement('div');
+  ui.style = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    color: black;
+    font-family: Arial;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 0 15px gray;
+    border: 2px solid white;
+    max-width: 320px;
+  `;
+  ui.innerHTML = `
+    <strong style="font-size: 16px;">Pack Opener</strong><br><br>
+    <label>Pack:
+      <select id="cheat-pack" style="width: 100%; padding: 6px;">
+        <option value="cat">Cat</option>
+        <option value="emoji">Emoji</option>
+        <option value="food">Food</option>
+        <option value="frog">Frog</option>
+        <option value="hidden">Hidden</option>
+        <option value="og">OG</option>
+        <option value="powerup">Power Up</option>
+        <option value="shadow">Shadow</option>
+        <option value="space">Space</option>
+        <option value="spooky">Spooky</option>
+        <option value="western">Western</option>
+        <option value="winter">Winter</option>
+      </select>
+    </label><br><br>
+    <label>Amount:
+      <input id="cheat-amount" type="number" value="1" min="1" style="width: 100%; padding: 6px;">
+    </label><br><br>
+    <button id="cheat-open" style="width: 100%; background: black; color: white; padding: 10px; font-weight: bold; border-radius: 6px; border: none;">Open Pack(s)</button>
+    <div id="cheat-result" style="margin-top: 10px;"></div>
+  `;
+  document.body.appendChild(ui);
+
+  // Logic for opening packs
+  document.getElementById('cheat-open').onclick = () => {
+    const pack = document.getElementById('cheat-pack').value;
+    const amount = parseInt(document.getElementById('cheat-amount').value);
+    const cost = PACK_COST[pack] * amount;
+
+    if (user.tokens < cost) {
+      alert(`You need ${cost} tokens, but only have ${user.tokens}`);
+      return;
+    }
+
+    const results = [];
+
+    for (let i = 0; i < amount; i++) {
+      // Calculate total chance for the pack
+      const totalChance = packs[pack].reduce((acc, blook) => acc + blook.chance, 0);
+      const rand = Math.random() * totalChance;
+      let sum = 0;
+      let reward = packs[pack][packs[pack].length - 1]; // fallback default
+
+      for (const blook of packs[pack]) {
+        sum += blook.chance;
+        if (rand <= sum) {
+          reward = blook;
+          break;
+        }
+      }
+
+      user.blooks = user.blooks || [];
+      user.blooks.push(reward);
+      results.push(reward.name);
+    }
+
+    user.tokens -= cost;
+    user.packsOpened = (user.packsOpened || 0) + amount;
+    users[currentUser] = user;
+    localStorage.setItem('fooditNewStorage', JSON.stringify(users));
+
+    // Update UI
+    const display = document.getElementById('token-count');
+    if (display) display.textContent = user.tokens.toLocaleString('en-US');
+
+    document.getElementById('cheat-result').textContent = ` You got: ${results.join(', ')}`;
+  };
+
+  console.log('%c Cheat code enabled: Open packs manually in bottom-right box.', 'color: black; font-weight: bold;');
+})();
