@@ -21,7 +21,8 @@
     space: 25,
     color: 20,
     food: 20,
-    sports: 20
+    sports: 20,
+    pet: 35
   };
 
    const emojiPack = [ 
@@ -168,7 +169,23 @@
       { name: "Gold Bowling Ball", img: "https://tri.pengpowers.xyz/media/capsules/Sports/trians/Gold%20Bowling%20Ball.png", rarity: "mystical", chance: 0.005 },
     ];
 
-  const packs = { emoji: emojiPack, hat: hatPack, og: ogPack, hacker: hackerPack, chess: chessPack, space: spacePack, color: colorPack, food: foodPack, sports: sportsPack };
+   const petPack = [ 
+      { name: "Goldfish", img: "https://triangulet.com/media/capsules/Pet/trians/Goldfish.png", rarity: "uncommon", chance: 15 },
+      { name: "Chicken", img: "https://triangulet.com/media/capsules/Pet/trians/Chicken.png", rarity: "uncommon", chance: 15 },
+      { name: "Rabbit", img: "https://triangulet.com/media/capsules/Pet/trians/Rabbit.png", rarity: "uncommon", chance: 15 },
+      { name: "Golden Retriever", img: "https://triangulet.com/media/capsules/Pet/trians/Golden%20Retriever.png", rarity: "rare", chance: 10 },
+      { name: "Tabby Cat", img: "https://triangulet.com/media/capsules/Pet/trians/Tabby%20Cat.png", rarity: "rare", chance: 10 },
+      { name: "Turtle", img: "https://triangulet.com/media/capsules/Pet/trians/Turtle.png", rarity: "rare", chance: 10 },
+      { name: "Orange Cat", img: "https://triangulet.com/media/capsules/Pet/trians/Orange%20Cat.png", rarity: "epic", chance: 5 },
+      { name: "Beagle", img: "https://triangulet.com/media/capsules/Pet/trians/Beagle.png", rarity: "epic", chance: 5 },
+      { name: "Black Cat", img: "https://triangulet.com/media/capsules/Pet/trians/Black%20Cat.png", rarity: "legendary", chance: 1 },
+      { name: "Parrot", img: "https://triangulet.com/media/capsules/Pet/trians/Parrot.png", rarity: "legendary", chance: 1 },
+      { name: "Hamster", img: "https://triangulet.com/media/capsules/Pet/trians/Hamster.png", rarity: "chroma", chance: 0.05 },
+      { name: "Dalmation", img: "https://triangulet.com/media/capsules/Pet/trians/Dalmatian.png", rarity: "chroma", chance: 0.05 },
+      { name: "Penguin", img: "https://triangulet.com/media/capsules/Pet/trians/Penguin.png", rarity: "mystical", chance: 0.005 },
+    ];
+
+  const packs = { emoji: emojiPack, hat: hatPack, og: ogPack, hacker: hackerPack, chess: chessPack, space: spacePack, color: colorPack, food: foodPack, sports: sportsPack, pet: petPack };
 
   // UI setup
   const ui = document.createElement('div');
@@ -200,6 +217,7 @@
         <option value="color">Color</option>
         <option value="food">Food</option>
         <option value="sports">Sports</option>
+        <option value="pet">Pet</option>
       </select>
     </label><br><br>
     <label>Amount:
