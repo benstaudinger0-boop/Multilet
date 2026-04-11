@@ -52,6 +52,8 @@
     horror: 50,
     lovely: 500,
     spring: 30,
+    garden: 30,
+    furry: 3,
     tte: 10000,
     miscellanous: 5000
   };
@@ -677,7 +679,24 @@
       { name: "Golden Griffin", img: "https://www.blacketvalues.com/static/images/Golden%20Griffin.png", rarity: "supreme", chance: 0.05 },
       { name: "Mug of Beer", img: "https://www.blacketvalues.com/static/images/Mug%20of%20Beer.png", rarity: "mythical", chance: 0.005 },
       ];
-      
+
+      const gardenPack = [
+      { name: "Watering Can", img: "https://blacket.org/content/blooks/Watering%20Can.png", rarity: "uncommon", chance: 15 },
+      { name: "Red Robin", img: "https://blacket.org/content/blooks/Red%20Robin%20newer.png", rarity: "uncommon", chance: 15 },
+      { name: "Potted Sunflower", img: "https://blacket.org/content/blooks/Potted%20Sunflower.png", rarity: "uncommon", chance: 15 },
+      { name: "Bag of Seeds", img: "https://blacket.org/content/blooks/Bag%20of%20Seeds.png", rarity: "uncommon", chance: 15 },
+      { name: "Sprinkler", img: "https://blacket.org/content/blooks/Sprinkler.png", rarity: "rare", chance: 10 },
+      { name: "Pot of Honey", img: "https://blacket.org/content/blooks/Pot%20of%20Honey.png", rarity: "rare", chance: 10 },
+      { name: "Fruit Tart", img: "https://blacket.org/content/blooks/Fruit%20Tart.png", rarity: "rare", chance: 10 },
+      { name: "Spring Gnome", img: "https://blacket.org/content/blooks/Spring%20Gnome.png", rarity: "epic", chance: 5 },
+      { name: "Faberge Egg", img: "https://blacket.org/content/blooks/Faberge%20Egg.png", rarity: "legendary", chance: 1 },
+      { name: "Cookies and Cream Zoey", img: "https://blacket.org/content/blooks/Cookies%20and%20Cream%20Zoey.png", rarity: "chroma", chance: 0.05 },
+      { name: "Mint Chocolate Zoey", img: "https://blacket.org/content/blooks/Mint%20Chocolate%20Zoey.png", rarity: "chroma", chance: 0.05 },
+      { name: "Chocolate Zoey", img: "https://blacket.org/content/blooks/Chocolate%20Zoey.png", rarity: "chroma", chance: 0.05 },
+      { name: "Spring Zoey", img: "https://blacket.org/content/blooks/Spring%20Zoey%20old.png", rarity: "chroma", chance: 0.05 },
+      { name: "Pinwheel", img: "https://blacket.org/content/blooks/Pinwheel.gif", rarity: "mystical", chance: 0.005 },
+      ];
+
       const cloverPack = [
       { name: "Lucky Boot", img: "https://www.blacketvalues.com/static/images/Lucky%20Boot.png", rarity: "uncommon", chance: 15 },
       { name: "Lucky Socks", img: "https://www.blacketvalues.com/static/images/Lucky%20Socks.png", rarity: "uncommon", chance: 15 },
@@ -698,7 +717,12 @@
       { name: "Jason Voorhees", img: "https://www.blacketvalues.com/static/images/Jason%20Voorhees.png", rarity: "supreme", chance: 0.05 },
       { name: "Ghostface", img: "https://www.blacketvalues.com/static/images/Ghostface.png", rarity: "mythical", chance: 0.005 },
       ];
-      
+
+      const furryPack = [
+      { name: "Tung Tung Tung Sahur", img: "https://blacket.org/content/blooks/Tung%20Tung%20Tung%20Sahur.png", rarity: "uncommon", chance: 99 },
+      { name: "Tung Tung Tung God", img: "https://blacket.org/content/blooks/Tung%20Tung%20Tung%20God.png", rarity: "chroma", chance: 0.01 },
+      ];
+
       const springPack = [
       { name: "Unpainted Egg", img: "https://www.blacketvalues.com/static/images/Unpainted%20Egg.png", rarity: "uncommon", chance: 15 },
       { name: "Spotted Egg", img: "https://www.blacketvalues.com/static/images/Spotted%20Egg.png", rarity: "uncommon", chance: 15 },
@@ -755,7 +779,7 @@
       { name: "Best Known Player Trophy", img: "https://blacket.org/content/blooks/Known_Award.webp", rarity: "unique", chance: 1 },
       ];
 
-  const packs = { bot: botPack, bug: bugPack, dino: dinoPack, candy: candyPack, fruit: fruitPack, magic: magicPack, music: musicPack, retro: retroPack, space: spacePack, autumn: autumnPack, combat: combatPack, pirate: piratePack, safari: safariPack, scifi: scifiPack, spooky: spookyPack, sports: sportsPack, summer: summerPack, aquatic: aquaticPack, outback: outbackPack, science: sciencePack, blizzard: blizzardPack, gemstone: gemstonePack, medieval: medievalPack, breakfast: breakfastPack, elemental: elementalPack, videogame: videogamePack, wonderland: wonderlandPack, icemonster: icemonsterPack, og: ogPack, time: timePack, color: colorPack, peeps: peepsPack, clover: cloverPack, lucky: luckyPack, horror: horrorPack, lovely: lovelyPack, spring: springPack, tte: ttePack, miscellanous: miscellanousPack, };
+  const packs = { bot: botPack, bug: bugPack, dino: dinoPack, candy: candyPack, fruit: fruitPack, magic: magicPack, music: musicPack, retro: retroPack, space: spacePack, autumn: autumnPack, combat: combatPack, pirate: piratePack, safari: safariPack, scifi: scifiPack, spooky: spookyPack, sports: sportsPack, summer: summerPack, aquatic: aquaticPack, outback: outbackPack, science: sciencePack, blizzard: blizzardPack, gemstone: gemstonePack, medieval: medievalPack, breakfast: breakfastPack, elemental: elementalPack, videogame: videogamePack, wonderland: wonderlandPack, icemonster: icemonsterPack, og: ogPack, time: timePack, color: colorPack, peeps: peepsPack, clover: cloverPack, lucky: luckyPack, horror: horrorPack, lovely: lovelyPack, spring: springPack, garden: gardenPack, furry: furryPack, tte: ttePack, miscellanous: miscellanousPack, };
 
   // UI setup
   const ui = document.createElement('div');
@@ -816,6 +840,8 @@
         <option value="horror">Horror</option>
         <option value="lovely">Lovely</option>
         <option value="spring">Spring</option>
+        <option value="garden">Garden</option>
+        <option value="furry">Furry</option>
         <option value="tte">TTE</option>
         <option value="miscellanous">Miscellanous</option>
       </select>
